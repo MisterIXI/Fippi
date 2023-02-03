@@ -4,15 +4,9 @@ using UnityEngine;
 
 public class MarchingSquares : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    Vector2Int ChunkID;
 
-    // Update is called once per frame
-    void Update()
-    {
+    private void Start() {
         
     }
 }
