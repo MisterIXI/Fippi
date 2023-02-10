@@ -3,14 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChunkGenerator : MonoBehaviour
+public class ChunkGenerator_old : MonoBehaviour
 {
-    public static ChunkGenerator Instance { get; private set; }
+    public static ChunkGenerator_old Instance { get; private set; }
     [field: SerializeField] public ChunkSettings ChunkSettings { get; private set; }
     public static Action OnChunksGenerated;
-    public MS_Chunk[,] Chunks;
+    public MS_Chunk_old[,] Chunks;
     private Vector3 _gridZeroWorldPosition;
     public static Vector3 GridZeroWorldPosition => Instance._gridZeroWorldPosition;
+    public int TileCount;
     private void Awake()
     {
         if (Instance != null)
@@ -26,7 +27,7 @@ public class ChunkGenerator : MonoBehaviour
     }
     private IEnumerator GenerateChunks()
     {
-        Chunks = new MS_Chunk[ChunkSettings.ChunksPerAxis, ChunkSettings.ChunksPerAxis];
+        Chunks = new MS_Chunk_old[ChunkSettings.ChunksPerAxis, ChunkSettings.ChunksPerAxis];
         float chunkSize = ChunkSettings.TilesPerAxis * ChunkSettings.UnitSize;
         float offset = -ChunkSettings.ChunksPerAxis / 2 * chunkSize;
         _gridZeroWorldPosition = new Vector3(offset, offset, 0);
@@ -37,7 +38,7 @@ public class ChunkGenerator : MonoBehaviour
                 GameObject chunkObject = new GameObject($"Chunk {x} {y}");
                 chunkObject.transform.parent = transform;
                 chunkObject.transform.localPosition = new(x * chunkSize + offset, y * chunkSize + offset, 0);
-                MS_Chunk chunk = chunkObject.AddComponent<MS_Chunk>();
+                MS_Chunk_old chunk = chunkObject.AddComponent<MS_Chunk_old>();
                 Chunks[x, y] = chunk;
             }
             // wait a frame after each row

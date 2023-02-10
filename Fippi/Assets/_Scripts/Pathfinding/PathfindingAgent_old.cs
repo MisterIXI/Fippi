@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class PathfindingAgent : MonoBehaviour
+public class PathfindingAgent_old : MonoBehaviour
 {
     [field: SerializeField] private Transform _target;
     public Action<List<Vector2>> OnPathFound;
@@ -26,16 +26,16 @@ public class PathfindingAgent : MonoBehaviour
     {
         if (UpdateDebugInfo)
         {
-            if (Pathfinding.Grid != null)
+            if (Pathfinding_old.Grid != null)
             {
-                density = Pathfinding.Grid[0, 0];
+                density = Pathfinding_old.Grid[0, 0];
             }
             currPos = Vector2Int.RoundToInt(transform.position);
         }
     }
     public void MoveTo(Vector3 target)
     {
-        Pathfinding.FindPath(Vector2Int.RoundToInt(transform.position), Vector2Int.RoundToInt(target), OnPathFound);
+        Pathfinding_old.FindPath(Vector2Int.RoundToInt(transform.position), Vector2Int.RoundToInt(target), OnPathFound);
     }
 
     public void OnPathFoundFunc(List<Vector2> path)

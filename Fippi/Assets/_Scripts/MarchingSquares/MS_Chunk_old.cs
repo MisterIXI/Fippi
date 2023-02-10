@@ -5,11 +5,11 @@ using System.Linq;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
-public class MS_Chunk : MonoBehaviour
+public class MS_Chunk_old : MonoBehaviour
 {
     public int[,] Densities;
     private Mesh _mesh;
-    private ChunkGenerator _chunkGenerator;
+    private ChunkGenerator_old _chunkGenerator;
     private MeshFilter _meshFilter;
     private MeshRenderer _meshRenderer;
     private ChunkSettings _chunkSettings;
@@ -17,7 +17,7 @@ public class MS_Chunk : MonoBehaviour
     [SerializeField] private bool ShowGizmos = false;
     private void Start()
     {
-        _chunkGenerator = transform.parent.GetComponent<ChunkGenerator>();
+        _chunkGenerator = transform.parent.GetComponent<ChunkGenerator_old>();
         _chunkSettings = _chunkGenerator.ChunkSettings;
         _meshFilter = GetComponent<MeshFilter>();
         _meshRenderer = GetComponent<MeshRenderer>();

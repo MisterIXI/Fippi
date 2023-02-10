@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pathfinding : MonoBehaviour
+public class Pathfinding_old : MonoBehaviour
 {
     [field: SerializeField] public PathfindingSettings PathfindingSettings { get; private set; }
     public static int[,] Grid { get; private set; }
-    public static Pathfinding Instance { get; private set; }
+    public static Pathfinding_old Instance { get; private set; }
 
 
     private void Awake()
@@ -22,21 +22,21 @@ public class Pathfinding : MonoBehaviour
     private void Start()
     {
         // ChunkGenerator.Instance.Chunks;
-        ChunkGenerator.OnChunksGenerated += CalculateWeightGrid;
+        ChunkGenerator_old.OnChunksGenerated += CalculateWeightGrid;
     }
 
 
     public void CalculateWeightGrid()
     {
-        int chunkCount = ChunkGenerator.Instance.ChunkSettings.ChunksPerAxis;
-        int tileCount = ChunkGenerator.Instance.ChunkSettings.TilesPerAxis;
+        int chunkCount = ChunkGenerator_old.Instance.ChunkSettings.ChunksPerAxis;
+        int tileCount = ChunkGenerator_old.Instance.ChunkSettings.TilesPerAxis;
 
         Grid = new int[chunkCount * tileCount, chunkCount * tileCount];
         for (int y = 0; y < chunkCount; y++)
         {
             for (int x = 0; x < chunkCount; x++)
             {
-                MS_Chunk chunk = ChunkGenerator.Instance.Chunks[x, y];
+                MS_Chunk_old chunk = ChunkGenerator_old.Instance.Chunks[x, y];
                 for (int tileY = 0; tileY < tileCount; tileY++)
                 {
                     for (int tileX = 0; tileX < tileCount; tileX++)
@@ -187,12 +187,12 @@ public class Pathfinding : MonoBehaviour
             Gizmos.color = Color.red;
             foreach (Vector2Int node in closedSet)
             {
-                Gizmos.DrawCube(node + (Vector2)ChunkGenerator.GridZeroWorldPosition, Vector3.one * 0.5f);
+                Gizmos.DrawCube(node + (Vector2)ChunkGenerator_old.GridZeroWorldPosition, Vector3.one * 0.5f);
             }
             Gizmos.color = Color.green;
             foreach (Vector2Int node in openSet)
             {
-                Gizmos.DrawCube(node + (Vector2)ChunkGenerator.GridZeroWorldPosition, Vector3.one * 0.5f);
+                Gizmos.DrawCube(node + (Vector2)ChunkGenerator_old.GridZeroWorldPosition, Vector3.one * 0.5f);
             }
         }
      }
