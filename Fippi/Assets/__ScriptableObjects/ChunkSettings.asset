@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0d72037e7c873d498c91caa828c873c, type: 3}
   m_Name: ChunkSettings
   m_EditorClassIdentifier: 
-  TilesPerAxis: 10
-  ChunksPerAxis: 10
-  FloorMaterial: {fileID: 2100000, guid: 6f92e453d0ff00d48b27e291a567badd, type: 2}
-  WallMaterial: {fileID: 2100000, guid: 203b426476cc76a4987bc2f0a5505630, type: 2}
+  <TilesPerAxis>k__BackingField: 51
+  <ChunksPerAxis>k__BackingField: 11
+  <UnitSize>k__BackingField: 1
+  <FloorMaterial>k__BackingField: {fileID: 2100000, guid: 6f92e453d0ff00d48b27e291a567badd, type: 2}
+  <WallMaterial>k__BackingField: {fileID: 2100000, guid: 203b426476cc76a4987bc2f0a5505630, type: 2}

@@ -3,10 +3,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ChunkSettings", menuName = "Fippi/ChunkSettings", order = 0)]
 public class ChunkSettings : ScriptableObject
 {
-    [Header("Chunk Settings")]
-    public int TilesPerAxis = 50;
-    public int ChunksPerAxis = 30;
-    [Header("Chunk materials")]
-    public Material FloorMaterial;
-    public Material WallMaterial;
+    [field: Header("Chunk Settings")]
+    [field: SerializeField] public int TilesPerAxis { get; private set; } = 51;
+    [field: SerializeField] public int ChunksPerAxis { get; private set; } = 11;
+    [field: SerializeField] public float UnitSize { get; private set; } = 1f;
+    [field: Header("Chunk materials")]
+    [field: SerializeField] public Material FloorMaterial { get; private set; } = null;
+    [field: SerializeField] public Material WallMaterial { get; private set; } = null;
 }

@@ -1,12 +1,25 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ChunkGenerator : MonoBehaviour
 {
-    public ChunkSettings ChunkSettings;
+    public static ChunkGenerator Instance { get; private set; }
+    [field: SerializeField] public ChunkSettings ChunkSettings { get; private set; }
+    public static Action OnChunksGenerated;
     public MS_Chunk[,] Chunks;
-
+    private Vector3 _gridZeroWorldPosition;
+    public static Vector3 GridZeroWorldPosition => Instance._gridZeroWorldPosition;
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+    }
     private void Start()
     {
         StartCoroutine(GenerateChunks());
@@ -14,8 +27,9 @@ public class ChunkGenerator : MonoBehaviour
     private IEnumerator GenerateChunks()
     {
         Chunks = new MS_Chunk[ChunkSettings.ChunksPerAxis, ChunkSettings.ChunksPerAxis];
-        float chunkSize = ChunkSettings.TilesPerAxis;
+        float chunkSize = ChunkSettings.TilesPerAxis * ChunkSettings.UnitSize;
         float offset = -ChunkSettings.ChunksPerAxis / 2 * chunkSize;
+        _gridZeroWorldPosition = new Vector3(offset, offset, 0);
         for (int y = 0; y < ChunkSettings.ChunksPerAxis; y++)
         {
             for (int x = 0; x < ChunkSettings.ChunksPerAxis; x++)
@@ -49,7 +63,7 @@ public class ChunkGenerator : MonoBehaviour
         {
             for (int x = 0; x < tileCount; x++)
             {
-                SetDensitiyAt(new Vector2Int(x + (chunkX * tileCount), y + (chunkY * tileCount)), Random.Range(0, 2), false);
+                SetDensitiyAt(new Vector2Int(x + (chunkX * tileCount), y + (chunkY * tileCount)), UnityEngine.Random.Range(0, 2), false);
             }
         }
     }
@@ -69,6 +83,7 @@ public class ChunkGenerator : MonoBehaviour
             // wait a frame after each row
             yield return null;
         }
+        OnChunksGenerated?.Invoke();
     }
 
     private void FillOuterEdges()
@@ -96,9 +111,10 @@ public class ChunkGenerator : MonoBehaviour
         }
 
     }
-    public void SetDensitiyAt(Vector2Int pos, int value, bool recalculate = true)
+    public static void SetDensitiyAt(Vector2Int pos, int value, bool recalculate = true)
     {
-        int tileCount = ChunkSettings.TilesPerAxis;
+        var Chunks = Instance.Chunks;
+        int tileCount = Instance.ChunkSettings.TilesPerAxis;
         int chunkX = pos.x / tileCount;
         int chunkY = pos.y / tileCount;
         int tileX = pos.x % tileCount;
@@ -112,19 +128,40 @@ public class ChunkGenerator : MonoBehaviour
         // check if in Bottom left corner
         if (tileX == 0 && chunkX > 0 && tileY == 0 && chunkY > 0)
             Chunks[chunkX - 1, chunkY - 1].Densities[tileCount, tileCount] = value;
-        // // check if in Bottom right corner
-        // if (tileX == tileCount && chunkX < ChunkSettings.ChunksPerAxis - 1 && tileY == 0 && chunkY > 0)
-        //     Chunks[chunkX + 1, chunkY - 1].Densities[0, tileCount] = value;
-        // // check if in Top right corner
-        // if (tileX == tileCount && chunkX < ChunkSettings.ChunksPerAxis - 1 && tileY == tileCount && chunkY < ChunkSettings.ChunksPerAxis - 1)
-        //     Chunks[chunkX + 1, chunkY + 1].Densities[0, 0] = value;
-        // // check if in Top left corner
-        // if (tileX == 0 && chunkX > 0 && tileY == tileCount && chunkY < ChunkSettings.ChunksPerAxis - 1)
-        //     Chunks[chunkX - 1, chunkY + 1].Densities[tileCount, 0] = value;
-
         // Debug.Log("Chunk Densities: " + Chunks[chunkX, chunkY].Densities);
         Chunks[chunkX, chunkY].Densities[tileX, tileY] = value;
         if (recalculate)
             Chunks[chunkX, chunkY].RecalculateChunk();
     }
+    public static int GetAxisTotalPointCount()
+    {
+        return Instance.ChunkSettings.ChunksPerAxis * Instance.ChunkSettings.TilesPerAxis;
+    }
+    public static int GetDensityAt(Vector2Int pos)
+    {
+        var Chunks = Instance.Chunks;
+        int tileCount = Instance.ChunkSettings.TilesPerAxis;
+        int chunkX = pos.x / tileCount;
+        int chunkY = pos.y / tileCount;
+        int tileX = pos.x % tileCount;
+        int tileY = pos.y % tileCount;
+        return Chunks[chunkX, chunkY].Densities[tileX, tileY];
+    }
+
+    public static Vector2Int GetIndexFromPos(Vector2 pos, bool CutToChunk = false)
+    {
+        var Chunks = Instance.Chunks;
+        var settings = Instance.ChunkSettings;
+        int tileCount = settings.TilesPerAxis;
+        int chunkCount = settings.ChunksPerAxis;
+        int tileX = Mathf.FloorToInt((pos.x + GridZeroWorldPosition.x));
+        int tileY = Mathf.FloorToInt((pos.y + GridZeroWorldPosition.y));
+        int maxTileX = tileCount * chunkCount;
+        if(tileX > settings.ChunksPerAxis * settings.TilesPerAxis || tileY > settings.ChunksPerAxis * settings.TilesPerAxis)
+            return new Vector2Int(-1, -1);
+        return new Vector2Int(tileX, tileY);
+    }
+
+    public struct PointInfo
+    {}
 }
