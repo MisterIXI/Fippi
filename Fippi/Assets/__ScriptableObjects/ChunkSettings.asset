@@ -16,4 +16,10 @@ MonoBehaviour:
   <ChunksPerAxis>k__BackingField: 11
   <UnitSize>k__BackingField: 1
   <FloorMaterial>k__BackingField: {fileID: 2100000, guid: 6f92e453d0ff00d48b27e291a567badd, type: 2}
-  <WallMaterial>k__BackingField: {fileID: 2100000, guid: 203b426476cc76a4987bc2f0a5505630, type: 2}
+  <WallMaterials>k__BackingField:
+  - {fileID: 2100000, guid: 7069e30f6451f7949b1ed2bc56fff677, type: 2}
+  - {fileID: 2100000, guid: 0e83844618d06e145a88ced9c74fc49b, type: 2}
+  - {fileID: 2100000, guid: b0baf6b12ccb9c44294ce75c5e26710e, type: 2}
+  - {fileID: 2100000, guid: fa47111cc03401b41994c215e760edbc, type: 2}
+  <Seed>k__BackingField: 0
+  <ChunksPerFrame>k__BackingField: 10

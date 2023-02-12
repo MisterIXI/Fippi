@@ -48,7 +48,7 @@ public class MS_Chunk_old : MonoBehaviour
             }
         }
         _mesh.vertices = vertices;
-        _meshRenderer.material = _chunkSettings.WallMaterial;
+        // _meshRenderer.material = _chunkSettings.WallMaterial;
         GameObject groundplane = GameObject.CreatePrimitive(PrimitiveType.Quad);
         groundplane.transform.localScale = new(_tileCount, _tileCount, 1);
         groundplane.transform.parent = transform;

@@ -9,5 +9,8 @@ public class ChunkSettings : ScriptableObject
     [field: SerializeField] public float UnitSize { get; private set; } = 1f;
     [field: Header("Chunk materials")]
     [field: SerializeField] public Material FloorMaterial { get; private set; } = null;
-    [field: SerializeField] public Material WallMaterial { get; private set; } = null;
+    [field: SerializeField] public Material[] WallMaterials { get; private set; } = null;
+    [field: Header("Chunk Generation")]
+    [field: SerializeField] public int Seed { get; private set; } = 0;
+    [field: SerializeField] public int ChunksPerFrame { get; private set; } = 10;
 }
