@@ -13,4 +13,5 @@ public class ChunkSettings : ScriptableObject
     [field: Header("Chunk Generation")]
     [field: SerializeField] public int Seed { get; private set; } = 0;
     [field: SerializeField] public int ChunksPerFrame { get; private set; } = 10;
+    [field: SerializeField][field: Range(0.001f,0.4f)] public float PerlinScale { get; private set; } = 0.3f;
 }

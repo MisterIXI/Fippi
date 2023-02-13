@@ -84,6 +84,23 @@ class MapGenTools
         }
     }
 
+    public static void FillMapWithPerlinNoise(float perlinScale = 0.2f, float offset = 0f)
+    {
+        // if (offset == 0)
+        //     offset = UnityEngine.Random.Range(float.MinValue, float.MaxValue);
+        // fill map with perlin noise
+        int[,,] wallInfo = _wallInfo;
+        int length = wallInfo.GetLength(0);
+        for (int y = 0; y < length; y++)
+        {
+            for (int x = 0; x < length; x++)
+            {
+                wallInfo[x, y, 0] = Mathf.RoundToInt(Mathf.PerlinNoise((x + offset) * perlinScale, (y + offset) * perlinScale));
+                wallInfo[x, y, 1] = 0;
+            }
+        }
+    }
+
     #region Helper Methods
     private static int GetSurroundingWallCount(int gridX, int gridY)
     {

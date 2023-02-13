@@ -23,3 +23,4 @@ MonoBehaviour:
   - {fileID: 2100000, guid: fa47111cc03401b41994c215e760edbc, type: 2}
   <Seed>k__BackingField: 0
   <ChunksPerFrame>k__BackingField: 10
+  <PerlinScale>k__BackingField: 0.174

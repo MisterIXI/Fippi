@@ -92,7 +92,8 @@ public class MarchingSquares : MonoBehaviour
     [ContextMenu("Generate Cave Walls")]
     public void GenerateCaveWalls()
     {
-        WallInfo = MapGenTools.GenerateCaveWalls(1);
+        // WallInfo = MapGenTools.GenerateCaveWalls(1);
+        MapGenTools.FillMapWithPerlinNoise(chunkSettings.PerlinScale);
         RefrehMapAsync();
     }
 
@@ -103,6 +104,7 @@ public class MarchingSquares : MonoBehaviour
         MapGenTools.FillMapEdgesWithSolidWall();
         RefrehMapAsync();
     }
+
 
     #region Debug
     [ContextMenu("Debug: Print WallInfo Length")] public void PrintWallInfoLength() => Debug.Log($"WallInfo Length: {WallInfo?.GetLength(0)}, {WallInfo?.GetLength(1)}, {WallInfo?.GetLength(2)}");
