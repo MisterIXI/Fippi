@@ -796,7 +796,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <DebugTarget>k__BackingField: {fileID: 431311824}
-  <MovementSettings>k__BackingField: {fileID: 0}
+  <MovementSettings>k__BackingField: {fileID: 11400000, guid: cd46bacd4ff85c043b5f7ff6d1221121, type: 2}
 --- !u!1 &1865464056
 GameObject:
   m_ObjectHideFlags: 0
