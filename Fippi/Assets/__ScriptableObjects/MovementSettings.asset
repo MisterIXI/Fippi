@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd4776d0fa2483446ac6e0de1ab6f735, type: 3}
   m_Name: MovementSettings
   m_EditorClassIdentifier: 
-  <MovementSpeed>k__BackingField: 3
+  <MovementSpeed>k__BackingField: 10
   <PositionCheckOffset>k__BackingField: 0.5
+  <CollisionCheckCountPerDirection>k__BackingField: 1

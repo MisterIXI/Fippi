@@ -10,10 +10,12 @@ public class UnitMovement : MonoBehaviour
     [field: SerializeField] private LinkedList<Vector2> _path;
     [field: SerializeField] public MovementSettings MovementSettings { get; private set; } = null;
     public Action<LinkedList<Vector2>> PathFound { get; set; }
+    private Rigidbody2D _rb;
     private void Start()
     {
         PathFound += OnPathFound;
         InputManager.OnMove += OnMove;
+        _rb = GetComponent<Rigidbody2D>();
     }
 
     private void UncheckedMovement(Vector2 target)
@@ -22,6 +24,10 @@ public class UnitMovement : MonoBehaviour
     }
 
     private void Update()
+    {
+    }
+
+    private void FixedUpdate()
     {
         CheckedMovement(transform.position + (Vector3)_movement);
     }
@@ -42,13 +48,13 @@ public class UnitMovement : MonoBehaviour
         //         return;
         //     }
         // }
-
+        _rb.MovePosition(transform.position + movement);
         // Position version
-        Vector2Int targetIndex = MarchingSquares.GetIndexFromPos(transform.position + movement + offset);
-        if (MarchingSquares.WallInfo[targetIndex.x, targetIndex.y, 0] == 0)
-        { // if target point is free
-            transform.position += movement;
-        }
+        // Vector2Int targetIndex = MarchingSquares.GetIndexFromPos(transform.position + movement + offset);
+        // if (MarchingSquares.WallInfo[targetIndex.x, targetIndex.y, 0] == 0)
+        // { // if target point is free
+        //     transform.position += movement;
+        // }
     }
     private Vector2 _movement;
     public void OnMove(InputAction.CallbackContext context)

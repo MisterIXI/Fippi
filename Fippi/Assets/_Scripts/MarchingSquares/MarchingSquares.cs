@@ -118,6 +118,19 @@ public class MarchingSquares : MonoBehaviour
         return index.x >= 0 && index.x < _tileCountPerAxis && index.y >= 0 && index.y < _tileCountPerAxis;
     }
 
+    public static byte GetWallByte(Vector2 position)
+    {
+        Vector2Int index = GetIndexFromPos(position);
+        byte points = 0;
+        int x = index.x;
+        int y = index.y;
+        if (WallInfo[x, y, 0] > 0) points |= 0b1000;
+        if (WallInfo[x + 1, y, 0] > 0) points |= 0b0100;
+        if (WallInfo[x + 1, y + 1, 0] > 0) points |= 0b0010;
+        if (WallInfo[x, y + 1, 0] > 0) points |= 0b0001;
+        return points;
+    }
+
     [ContextMenu("Generate Cave Walls")]
     public void GenerateCaveWalls()
     {
