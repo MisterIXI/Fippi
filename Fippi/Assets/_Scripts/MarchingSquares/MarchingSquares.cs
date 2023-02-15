@@ -82,6 +82,7 @@ public class MarchingSquares : MonoBehaviour
                 GameObject chunk = new GameObject($"Chunk {x} {y}");
                 chunk.transform.parent = transform;
                 chunk.transform.localPosition = offset + new Vector3(x * _chunkAxisLength, y * _chunkAxisLength, 0);
+                chunk.tag = "Wall";
                 MS_Chunk msChunk = chunk.AddComponent<MS_Chunk>();
                 msChunk.InitMesh(chunkSettings, new Vector2Int(x, y));
                 msChunk.RecalculateChunk();

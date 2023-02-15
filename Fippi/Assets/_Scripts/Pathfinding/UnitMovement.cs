@@ -2,15 +2,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class UnitMovement : MonoBehaviour
 {
     [field: SerializeField] public Transform DebugTarget { get; private set; } = null;
     [field: SerializeField] private LinkedList<Vector2> _path;
+    [field: SerializeField] public MovementSettings MovementSettings { get; private set; } = null;
     public Action<LinkedList<Vector2>> PathFound { get; set; }
     private void Start()
     {
         PathFound += OnPathFound;
+        InputManager.OnMove += OnMove;
     }
 
     private void UncheckedMovement(Vector2 target)
@@ -18,11 +21,47 @@ public class UnitMovement : MonoBehaviour
 
     }
 
+    private void Update()
+    {
+        CheckedMovement(transform.position + (Vector3)_movement);
+    }
     private void CheckedMovement(Vector2 target)
     {
+        if (target == (Vector2)transform.position)
+            return;
+        Vector2 nDir = (target - (Vector2)transform.position).normalized;
+        Vector2Int currIndex = MarchingSquares.GetIndexFromPos(transform.position);
+        Vector3 offset = nDir * MovementSettings.PositionCheckOffset;
+        Vector3 movement = nDir * MovementSettings.MovementSpeed * Time.deltaTime;
+        // // Raycast version
+        // RaycastHit hit;
+        // if (Physics.Raycast(transform.position + movement + offset + Vector3.back, Vector3.forward, out hit, 5))
+        // {
+        //     if (hit.)
+        //     {
+        //         return;
+        //     }
+        // }
 
+        // Position version
+        Vector2Int targetIndex = MarchingSquares.GetIndexFromPos(transform.position + movement + offset);
+        if (MarchingSquares.WallInfo[targetIndex.x, targetIndex.y, 0] == 0)
+        { // if target point is free
+            transform.position += movement;
+        }
     }
-
+    private Vector2 _movement;
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            _movement = context.ReadValue<Vector2>();
+        }
+        else if (context.canceled)
+        {
+            _movement = Vector2.zero;
+        }
+    }
     public void PrintPath()
     {
         if (_path == null)

@@ -51,7 +51,7 @@ public class Pathfinding : MonoBehaviour
             openSet.Remove(current);
             if (current == endInt)
             {
-                callback.Invoke(ReconstructPath(cameFrom, current));
+                callback.Invoke(ReconstructPath(cameFrom, current, end));
                 _searchingPath = false;
                 stopwatch.Stop();
                 UnityEngine.Debug.Log("Pathfinding took: " + stopwatch.ElapsedMilliseconds + "ms");
@@ -118,9 +118,10 @@ public class Pathfinding : MonoBehaviour
         return neighbours;
     }
 
-    private static LinkedList<Vector2> ReconstructPath(Dictionary<Vector2Int, Vector2Int> cameFrom, Vector2Int current)
+    private static LinkedList<Vector2> ReconstructPath(Dictionary<Vector2Int, Vector2Int> cameFrom, Vector2Int current, Vector2 targetPos)
     {
         LinkedList<Vector2> totalPath = new LinkedList<Vector2>();
+        totalPath.AddFirst(targetPos);
         totalPath.AddFirst(MarchingSquares.GetPosFromIndex(current));
         while (cameFrom.ContainsKey(current))
         {

@@ -25,18 +25,22 @@ public class InputManager : MonoBehaviour
         UnsubscribeFromActions();
     }
     public static event Action<CallbackContext> OnMove;
+    public void OnMoveInput(CallbackContext context)
+    {
+        OnMove?.Invoke(context);
+    }
     private void SubscribeToActions()
     {
-        _playerInput.actions["Move"].started += OnMove;
-        _playerInput.actions["Move"].performed += OnMove;
-        _playerInput.actions["Move"].canceled += OnMove;
+        _playerInput.actions["Move"].started += OnMoveInput;
+        _playerInput.actions["Move"].performed += OnMoveInput;
+        _playerInput.actions["Move"].canceled += OnMoveInput;
     }
 
     private void UnsubscribeFromActions()
     {
-        _playerInput.actions["Move"].started -= OnMove;
-        _playerInput.actions["Move"].performed -= OnMove;
-        _playerInput.actions["Move"].canceled -= OnMove;
+        _playerInput.actions["Move"].started -= OnMoveInput;
+        _playerInput.actions["Move"].performed -= OnMoveInput;
+        _playerInput.actions["Move"].canceled -= OnMoveInput;
     }
 
 }
