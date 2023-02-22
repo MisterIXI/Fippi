@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 313a9593ffc7a524c922807a817e2e52, type: 3}
+  m_Name: SpawnSettings
+  m_EditorClassIdentifier: 
+  <CommanderCount>k__BackingField: 3
+  <CommanderColors>k__BackingField:
+  - {r: 1, g: 0.3537736, b: 0.3537736, a: 1}
+  - {r: 0.57885873, g: 1, b: 0.3066038, a: 1}
+  - {r: 1, g: 0.96144354, b: 0.4764151, a: 1}
+  - {r: 0.3820755, g: 0.56694615, b: 1, a: 1}
+  <CommanderPrefab>k__BackingField: {fileID: 6453856251109322106, guid: d76a5759e43d4284bafa60d1ee83d2ad, type: 3}
+  <BuilderPrefab>k__BackingField: {fileID: 0}
+  <DiggerPrefab>k__BackingField: {fileID: 0}
+  <ScoutPrefab>k__BackingField: {fileID: 0}
+  <SoldierPrefab>k__BackingField: {fileID: 0}
+  <RangedPrefab>k__BackingField: {fileID: 0}

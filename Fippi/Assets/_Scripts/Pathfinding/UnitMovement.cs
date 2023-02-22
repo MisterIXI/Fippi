@@ -8,11 +8,13 @@ public class UnitMovement : MonoBehaviour
 {
     [field: SerializeField] public Transform DebugTarget { get; private set; } = null;
     [field: SerializeField] private LinkedList<Vector2> _path;
-    [field: SerializeField] public MovementSettings MovementSettings { get; private set; } = null;
+    private MovementSettings _movementSettings;
     public Action<LinkedList<Vector2>> PathFound { get; set; }
     private Rigidbody2D _rb;
+    public bool IsFollowingPath { get; private set; }
     private void Start()
     {
+        _movementSettings = SpawnManager.MovementSettings;
         PathFound += OnPathFound;
         InputManager.OnMove += OnMove;
         _rb = GetComponent<Rigidbody2D>();
@@ -37,8 +39,8 @@ public class UnitMovement : MonoBehaviour
             return;
         Vector2 nDir = (target - (Vector2)transform.position).normalized;
         Vector2Int currIndex = MarchingSquares.GetIndexFromPos(transform.position);
-        Vector3 offset = nDir * MovementSettings.PositionCheckOffset;
-        Vector3 movement = nDir * MovementSettings.MovementSpeed * Time.deltaTime;
+        Vector3 offset = nDir * _movementSettings.PositionCheckOffset;
+        Vector3 movement = nDir * _movementSettings.MovementSpeed * Time.deltaTime;
         // // Raycast version
         // RaycastHit hit;
         // if (Physics.Raycast(transform.position + movement + offset + Vector3.back, Vector3.forward, out hit, 5))
@@ -48,7 +50,7 @@ public class UnitMovement : MonoBehaviour
         //         return;
         //     }
         // }
-        _rb.MovePosition(transform.position + movement);
+        // _rb.MovePosition(transform.position + movement);
         // Position version
         // Vector2Int targetIndex = MarchingSquares.GetIndexFromPos(transform.position + movement + offset);
         // if (MarchingSquares.WallInfo[targetIndex.x, targetIndex.y, 0] == 0)

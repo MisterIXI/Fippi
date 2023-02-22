@@ -8,8 +8,8 @@ public class MarchingSquares : MonoBehaviour
     public static int[,,] WallInfo { get; private set; }
     public static MarchingSquares Instance { get; private set; }
     public static MS_Chunk[,] Chunks { get; private set; }
-    public static event Action OnWallInfoPointerChanged;
-    public static event Action OnWallInfoChanged;
+    // public static event Action OnWallInfoPointerChanged;
+    // public static event Action OnWallInfoChanged;
     [field: SerializeField] public ChunkSettings chunkSettings { get; private set; } = null;
     private static int _chunkCount => Instance.chunkSettings.ChunksPerAxis;
     private static int _tileCount => Instance.chunkSettings.TilesPerAxis;
@@ -31,12 +31,15 @@ public class MarchingSquares : MonoBehaviour
 
     private void Start()
     {
+
+    }
+    public void DebugMapStart()
+    {
         MapGenTools.FillMapWithPerlinNoise(chunkSettings.PerlinScale);
         // MapGenTools.FillMapAtRandom();
         MapGenTools.FillMapEdgesWithSolidWall();
         GenerateChunksAsync();
     }
-
 
     public void RefrehMapAsync()
     {

@@ -10,6 +10,9 @@ public class ColliderUpdater : MonoBehaviour
     private float _colliderOffset => _movementSettings.CollisionCheckCountPerDirection * _unitSize;
     private float _unitSize => MarchingSquares.Instance.chunkSettings.UnitSize;
     [SerializeField] private bool _drawGizmos = true;
+    private void Awake() {
+        GetComponent<CommanderController>().OnNameChanged += OnNameUpdate;
+    }
     private void Start()
     {
         CreateColliders();
@@ -24,9 +27,15 @@ public class ColliderUpdater : MonoBehaviour
         }
 
     }
+    private void OnNameUpdate(string newName)
+    {
+        if (_colliderParent != null)
+            _colliderParent.name = "Colliders for: " + newName;
+    }
     private void CreateColliders()
     {
         _colliderParent = new GameObject("Colliders for: " + gameObject.name);
+        // _colliderParent.transform.parent = SpawnManager.ColliderParent;
         _polygonColliders = new PolygonCollider2D[_colliderAxisLength, _colliderAxisLength];
         for (int x = 0; x < _colliderAxisLength; x++)
         {
