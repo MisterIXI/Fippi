@@ -5,6 +5,7 @@ using TMPro;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
+using UnityEngine.InputSystem;
 public class CommanderController : NetworkBehaviour
 {
     public NetworkObject networkObject => gameObject.GetComponent<NetworkObject>();
@@ -12,22 +13,23 @@ public class CommanderController : NetworkBehaviour
     public static event Action<ulong, CommanderController, CommanderController> OnActiveCommanderChanged;
     public NetworkVariable<int> commanderIDVar = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     [field: SerializeField] private TextMeshPro commanderNameText;
-    public ulong playerID { get; private set; }
-    private event Action<bool> OwnActiveStateChanged;
-    public bool IsActive => activeCommander == this;
+    public event Action<bool> OwnActiveStateChanged;
+    public bool IsActiveCommander => activeCommander == this;
     public event Action<bool> OnOwnershipChanged;
     public event Action<string> OnNameChanged;
     public static int owner_id_helper = 0;
     [field: SerializeField] public VisualUpdater VisualUpdater { get; private set; }
     private void Awake()
     {
-
         OnActiveCommanderChanged += OnActiveCommanderChangedHandler;
         commanderIDVar.OnValueChanged += (oldValue, newValue) => UpdateText();
+        commanderIDVar.OnValueChanged += HandleIdChange;
+
     }
     private void Start()
     {
     }
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -42,7 +44,12 @@ public class CommanderController : NetworkBehaviour
         Debug.Log("IsOwner: " + IsOwner + " " + gameObject.name);
         VisualUpdater.UpdateVisuals();
     }
-
+    private void HandleIdChange(int oldId, int newId)
+    {
+        Debug.Log("Commander ID changed from " + oldId + " to " + newId);
+        if (newId != -1)
+            SpawnManager.RegisterNewCommander(OwnerClientId, newId, this);
+    }
     private IEnumerator DelayedStart()
     {
         yield return new WaitForEndOfFrame();
@@ -53,9 +60,9 @@ public class CommanderController : NetworkBehaviour
 
     public void MakeActiveCommander()
     {
-        if (IsOwner)
+        if (IsOwner && activeCommander != this)
         {
-            OnActiveCommanderChanged?.Invoke(playerID, activeCommander, this);
+            OnActiveCommanderChanged?.Invoke(OwnerClientId, activeCommander, this);
             activeCommander = this;
             Debug.Log("Made myself the active commander! " + gameObject.name);
         }
@@ -89,11 +96,75 @@ public class CommanderController : NetworkBehaviour
         if (playerID == NetworkManager.LocalClientId)
         {
             // on commander of own player changed
+            if (oldCommander == this)
+                UnsubscribeFromInputs();
+            else if (newCommander == this)
+                SubscribeToInputs();
         }
         else
         {
             // other player's commander selection changed
         }
+    }
+
+    private void OnSwitchCommanderInput(InputAction.CallbackContext context)
+    {
+        if (IsActiveCommander && context.performed)
+        {
+            float input = context.ReadValue<float>();
+            if (input > 0)
+            {
+                // switch to next commander
+                int newCommanderID = commanderIDVar.Value + 1;
+                newCommanderID %= SpawnManager.SpawnSettings.CommanderCount;
+                Debug.Log("Switching from " + commanderIDVar.Value + " to " + newCommanderID + "");
+
+                SpawnManager.commanders[OwnerClientId][newCommanderID].MakeActiveCommander();
+            }
+            else
+            {
+                // switch to previous commander
+                int newCommanderID = commanderIDVar.Value - 1;
+                if (newCommanderID < 0)
+                    newCommanderID = SpawnManager.SpawnSettings.CommanderCount - 1;
+                SpawnManager.commanders[OwnerClientId][newCommanderID].MakeActiveCommander();
+            }
+        }
+    }
+
+    private void OnSwitchCommanderInputNumber(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+
+            int input = 1;
+            int.TryParse(context.control.name, out input);
+            if (input == 0)
+                input = 10;
+            input--;
+            if (input >= 0 && input < SpawnManager.SpawnSettings.CommanderCount)
+            {
+                SpawnManager.commanders[OwnerClientId][input].MakeActiveCommander();
+            }
+        }
+    }
+
+    public override void OnDestroy()
+    {
+        UnsubscribeFromInputs();
+        base.OnDestroy();
+    }
+
+    private void SubscribeToInputs()
+    {
+        InputManager.OnCommanderSwitch += OnSwitchCommanderInput;
+        InputManager.OnCommanderSwitchNumber += OnSwitchCommanderInputNumber;
+    }
+
+    private void UnsubscribeFromInputs()
+    {
+        InputManager.OnCommanderSwitch -= OnSwitchCommanderInput;
+        InputManager.OnCommanderSwitchNumber -= OnSwitchCommanderInputNumber;
     }
 
     [ContextMenu("DebugPrintActiveCommanderName")]

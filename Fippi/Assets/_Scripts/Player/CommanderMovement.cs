@@ -40,6 +40,7 @@ public class CommanderMovement : MonoBehaviour
     private void Start()
     {
         _movementSettings = SpawnManager.MovementSettings;
+        _commanderController.OwnActiveStateChanged += OnOwnActiveStateChanged;
     }
     private void FixedUpdate()
     {
@@ -49,7 +50,8 @@ public class CommanderMovement : MonoBehaviour
     private void HandleMovement()
     {
         // lerp movement
-        _moveVector = Vector2.MoveTowards(_moveVector, _moveInput, _movementSettings.CMInputChangeMax);
+        if (_commanderController.IsActiveCommander && !_unitMovement.IsFollowingPath)
+            _moveVector = Vector2.MoveTowards(_moveVector, _moveInput, _movementSettings.CMInputChangeMax);
         // apply movement
         _rigidbody2D.velocity = _moveVector * _movementSettings.CMMoveSpeed;
     }
@@ -63,26 +65,21 @@ public class CommanderMovement : MonoBehaviour
 
     private void ResetInputs()
     {
-        _moveInput = Vector2.zero;
+        // _moveInput = Vector2.zero;
         _moveVector = Vector2.zero;
+        _rigidbody2D.velocity = Vector2.zero;
     }
     private void OnMoveInput(InputAction.CallbackContext context)
     {
         // Debug.Log("Commander " + gameObject.name + " Move Input: " + context.ReadValue<Vector2>());
-        if (_commanderController.IsActive && !_unitMovement.IsFollowingPath)
+
+        if (context.performed)
         {
-            if (context.performed)
-            {
-                _moveInput = context.ReadValue<Vector2>();
-            }
-            else if (context.canceled)
-            {
-                _moveInput = Vector2.zero;
-            }
+            _moveInput = context.ReadValue<Vector2>();
         }
-        else
+        else if (context.canceled)
         {
-            // Debug.Log("Commander " + gameObject.name + " is active: " + _commanderController.IsActive + "or PathFollowing: " + _unitMovement.IsFollowingPath + "");
+            _moveInput = Vector2.zero;
         }
     }
 
