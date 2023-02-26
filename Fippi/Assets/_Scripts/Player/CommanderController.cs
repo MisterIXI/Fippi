@@ -18,6 +18,8 @@ public class CommanderController : NetworkBehaviour
     public event Action<bool> OnOwnershipChanged;
     public event Action<string> OnNameChanged;
     public static int owner_id_helper = 0;
+    public Vector2 Heading => transform.right;
+
     [field: SerializeField] public VisualUpdater VisualUpdater { get; private set; }
     private void Awake()
     {

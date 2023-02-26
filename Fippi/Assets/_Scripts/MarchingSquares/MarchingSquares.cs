@@ -134,6 +134,12 @@ public class MarchingSquares : MonoBehaviour
         return points;
     }
 
+    public static bool IsPositionInWall(Vector2 position)
+    {
+        Vector2Int index = GetIndexFromPos(position);
+        int wallValue = WallInfo[index.x, index.y, 0];
+        return wallValue != (int)WallType.Wall && wallValue != (int)WallType.None;
+    }
     [ContextMenu("Generate Cave Walls")]
     public void GenerateCaveWalls()
     {

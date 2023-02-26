@@ -11,7 +11,7 @@ public class CommanderMovement : MonoBehaviour
     private Vector2 _moveInput;
     private Vector2 _moveVector;
     private Rigidbody2D _rigidbody2D;
-    private MovementSettings _movementSettings;
+    private CommanderSettings _movementSettings;
     private UnitMovement _unitMovement;
     private void Awake()
     {
@@ -39,7 +39,7 @@ public class CommanderMovement : MonoBehaviour
     }
     private void Start()
     {
-        _movementSettings = SpawnManager.MovementSettings;
+        _movementSettings = SpawnManager.CommanderSettings;
         _commanderController.OwnActiveStateChanged += OnOwnActiveStateChanged;
     }
     private void FixedUpdate()
@@ -54,6 +54,7 @@ public class CommanderMovement : MonoBehaviour
             _moveVector = Vector2.MoveTowards(_moveVector, _moveInput, _movementSettings.CMInputChangeMax);
         // apply movement
         _rigidbody2D.velocity = _moveVector * _movementSettings.CMMoveSpeed;
+        transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(_moveVector.y, _moveVector.x) * Mathf.Rad2Deg);
     }
     private void OnOwnActiveStateChanged(bool isActive)
     {

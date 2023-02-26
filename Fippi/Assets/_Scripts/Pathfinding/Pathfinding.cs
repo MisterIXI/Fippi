@@ -40,11 +40,21 @@ public class Pathfinding : MonoBehaviour
         Vector2Int startInt = MarchingSquares.GetIndexFromPos(start);
         Vector2Int endInt = MarchingSquares.GetIndexFromPos(end);
         // Debug.Log("Pathfinding started with start: " + startInt + " and end: " + endInt);
-
-        openSetQueue.Enqueue(startInt, 0);
-        openSet.Add(startInt);
-        gScore[startInt] = 0;
-        fScore[startInt] = Vector2Int.Distance(startInt, endInt);
+        if (MarchingSquares.WallInfo[startInt.x, startInt.y, 0] == 1)
+        {
+            UnityEngine.Debug.LogWarning("Start is a wall");
+        }
+        else if (MarchingSquares.WallInfo[endInt.x, endInt.y, 0] == 1)
+        {
+            UnityEngine.Debug.LogWarning("End is a wall");
+        }
+        else
+        { // only if start and end is not a wall currently
+            openSetQueue.Enqueue(startInt, 0);
+            openSet.Add(startInt);
+            gScore[startInt] = 0;
+            fScore[startInt] = Vector2Int.Distance(startInt, endInt);
+        }
         while (openSet.Count > 0)
         {
             Vector2Int current = openSetQueue.Dequeue();

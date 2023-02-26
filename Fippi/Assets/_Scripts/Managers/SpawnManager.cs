@@ -7,8 +7,8 @@ public class SpawnManager : NetworkBehaviour
 
     [field: SerializeField] public SpawnSettings spawnSettings { get; private set; } = null;
     public static SpawnSettings SpawnSettings => Instance.spawnSettings;
-    [field: SerializeField] public MovementSettings movementSettings { get; private set; } = null;
-    public static MovementSettings MovementSettings => Instance.movementSettings;
+    [field: SerializeField] public CommanderSettings movementSettings { get; private set; } = null;
+    public static CommanderSettings CommanderSettings => Instance.movementSettings;
     public static Dictionary<ulong, List<CommanderController>> commanders = new Dictionary<ulong, List<CommanderController>>();
     [field: SerializeField] private Transform _colliderParent;
     public static Transform ColliderParent => Instance._colliderParent;
@@ -87,6 +87,35 @@ public class SpawnManager : NetworkBehaviour
             Debug.Log("Player " + kvp.Key + " has " + kvp.Value.Count + " commanders: " + commanderNames);
         }
     }
+
+    public static UnitSettings GetWorkerSettings(WorkerTypes workerType)
+    {
+        switch (workerType)
+        {
+            case WorkerTypes.Builder:
+                return Instance.spawnSettings.BuilderSettings;
+            case WorkerTypes.Digger:
+                return Instance.spawnSettings.DiggerSettings;
+            case WorkerTypes.Scout:
+                return Instance.spawnSettings.ScoutSettings;
+            default:
+                return null;
+        }
+    }
+
+    public static UnitSettings GetFighterSettings(FighterTypes fighterType)
+    {
+        switch (fighterType)
+        {
+            case FighterTypes.Soldier:
+                return Instance.spawnSettings.SoldierSettings;
+            case FighterTypes.Ranged:
+                return Instance.spawnSettings.RangedSettings;
+            default:
+                return null;
+        }
+    }
+
     private void OnDrawGizmos()
     {
         if (CommanderController.activeCommander != null)

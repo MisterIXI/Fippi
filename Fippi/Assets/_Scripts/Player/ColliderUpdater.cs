@@ -5,9 +5,9 @@ public class ColliderUpdater : MonoBehaviour
     private GameObject _colliderParent;
     private PolygonCollider2D[,] _polygonColliders;
     private Vector2Int _lastPos;
-    [SerializeField] private MovementSettings _movementSettings;
-    private int _colliderAxisLength => _movementSettings.CollisionCheckCountPerDirection * 2 + 1;
-    private float _colliderOffset => _movementSettings.CollisionCheckCountPerDirection * _unitSize;
+    [SerializeField] private CommanderSettings _commanderSettings;
+    private int _colliderAxisLength => _commanderSettings.CollisionCheckCountPerDirection * 2 + 1;
+    private float _colliderOffset => _commanderSettings.CollisionCheckCountPerDirection * _unitSize;
     private float _unitSize => MarchingSquares.Instance.chunkSettings.UnitSize;
     [SerializeField] private bool _drawGizmos = true;
     private void Awake() {

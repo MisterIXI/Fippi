@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <spawnSettings>k__BackingField: {fileID: 11400000, guid: 6b5f3cbb3b204dc43a1cd4a37f83e843, type: 2}
-  <movementSettings>k__BackingField: {fileID: 11400000, guid: cd46bacd4ff85c043b5f7ff6d1221121, type: 2}
+  <movementSettings>k__BackingField: {fileID: 11400000, guid: 3f8357e969d8dc842b6195cfa50a354d, type: 2}
   _colliderParent: {fileID: 0}
   _commanderParent: {fileID: 0}
 --- !u!114 &1945838250200420260

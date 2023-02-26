@@ -10,6 +10,13 @@ public class SpawnSettings : ScriptableObject
     [field: Header("Prefabs")]
     [field: Header("Commander")]
     [field: SerializeField] public CommanderController CommanderPrefab { get; private set; } = null;
+    [field: Header("WorkerSettings")]
+    [field: SerializeField] public UnitSettings BuilderSettings { get; private set; } = null;
+    [field: SerializeField] public UnitSettings DiggerSettings { get; private set; } = null;
+    [field: SerializeField] public UnitSettings ScoutSettings { get; private set; } = null;
+    [field: Header("FighterSettings")]
+    [field: SerializeField] public UnitSettings SoldierSettings { get; private set; } = null;
+    [field: SerializeField] public UnitSettings RangedSettings { get; private set; } = null;
     [field: Header("WorkerUnits")]
     [field: SerializeField] public GameObject BuilderPrefab { get; private set; } = null;
     [field: SerializeField] public GameObject DiggerPrefab { get; private set; } = null;
