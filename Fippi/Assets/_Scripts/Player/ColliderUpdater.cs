@@ -5,20 +5,28 @@ public class ColliderUpdater : MonoBehaviour
     private GameObject _colliderParent;
     private PolygonCollider2D[,] _polygonColliders;
     private Vector2Int _lastPos;
-    [SerializeField] private CommanderSettings _commanderSettings;
-    private int _colliderAxisLength => _commanderSettings.CollisionCheckCountPerDirection * 2 + 1;
-    private float _colliderOffset => _commanderSettings.CollisionCheckCountPerDirection * _unitSize;
+    private ColliderSettings _colliderSettings;
+    private int _colliderAxisLength => _colliderSettings.ColliderCountPerDirection * 2 + 1;
+    private float _colliderOffset => _colliderSettings.ColliderCountPerDirection * _unitSize;
     private float _unitSize => MarchingSquares.Instance.chunkSettings.UnitSize;
-    [SerializeField] private bool _drawGizmos = true;
-    private void Awake() {
-        GetComponent<CommanderController>().OnNameChanged += OnNameUpdate;
+    private int _currentColliderCount;
+    private void Awake()
+    {
+
     }
     private void Start()
     {
+        var commanderTest = GetComponent<CommanderController>();
+        if (commanderTest != null)
+            _colliderSettings = SpawnManager.SpawnSettings.CommanderColliderSettings;
+        else
+            _colliderSettings = SpawnManager.SpawnSettings.UnitColliderSettings;
         CreateColliders();
     }
-    private void Update()
+    private void FixedUpdate()
     {
+        if (_currentColliderCount != _colliderAxisLength * _colliderAxisLength)
+            CreateColliders();
         Vector2Int currPos = MarchingSquares.GetIndexFromPos(transform.position);
         if (currPos != _lastPos)
         {
@@ -34,6 +42,9 @@ public class ColliderUpdater : MonoBehaviour
     }
     private void CreateColliders()
     {
+        _currentColliderCount = _colliderAxisLength * _colliderAxisLength;
+        if (_colliderParent != null)
+            Destroy(_colliderParent);
         _colliderParent = new GameObject("Colliders for: " + gameObject.name);
         // _colliderParent.transform.parent = SpawnManager.ColliderParent;
         _polygonColliders = new PolygonCollider2D[_colliderAxisLength, _colliderAxisLength];
@@ -77,7 +88,7 @@ public class ColliderUpdater : MonoBehaviour
     }
     private void OnDrawGizmos()
     {
-        if (_drawGizmos && _polygonColliders != null)
+        if (_colliderSettings && _colliderSettings.DrawDebugGizmos && _polygonColliders != null)
         {
             Vector3 unitOffset = _unitSize * Vector3.one * 0.5f;
             for (int x = 0; x < _colliderAxisLength; x++)

@@ -786,15 +786,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6186740674688325217, guid: 409936831b9afaf40ae638d37c54fdbb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.6431105
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6186740674688325217, guid: 409936831b9afaf40ae638d37c54fdbb, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -14.774022
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6186740674688325217, guid: 409936831b9afaf40ae638d37c54fdbb, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.123946175
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6186740674688325217, guid: 409936831b9afaf40ae638d37c54fdbb, type: 3}
       propertyPath: m_LocalRotation.w
@@ -834,6 +834,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6186740674688325222, guid: 409936831b9afaf40ae638d37c54fdbb, type: 3}
       propertyPath: NetworkConfig.NetworkPrefabs.Array.data[1].Prefab
+      value: 
+      objectReference: {fileID: 2723301475924785946, guid: 8744dd3ce1cf5884fa8a279c93eec2bb, type: 3}
+    - target: {fileID: 6186740674688325222, guid: 409936831b9afaf40ae638d37c54fdbb, type: 3}
+      propertyPath: NetworkConfig.NetworkPrefabs.Array.data[2].Prefab
       value: 
       objectReference: {fileID: 4026631306703893021, guid: d76979022fe5b3a4d802752f876fb9ae, type: 3}
     m_RemovedComponents: []

@@ -4,7 +4,6 @@ using Unity.Netcode;
 using UnityEngine;
 public class SpawnManager : NetworkBehaviour
 {
-
     [field: SerializeField] public SpawnSettings spawnSettings { get; private set; } = null;
     public static SpawnSettings SpawnSettings => Instance.spawnSettings;
     [field: SerializeField] public CommanderSettings movementSettings { get; private set; } = null;
@@ -14,6 +13,7 @@ public class SpawnManager : NetworkBehaviour
     public static Transform ColliderParent => Instance._colliderParent;
     [field: SerializeField] private Transform _commanderParent;
     public static Transform CommanderParent => Instance._commanderParent;
+    public static Dictionary<Vector2Int, HashSet<UnitController>> UnitsByChunk { get; private set; } = new Dictionary<Vector2Int, HashSet<UnitController>>();
 
     public static SpawnManager Instance { get; private set; }
 
@@ -25,7 +25,16 @@ public class SpawnManager : NetworkBehaviour
             return;
         }
         Instance = this;
+        MarchingSquares.OnChunksGenerated += OnChunksGenerated;
+    }
 
+    private void OnChunksGenerated()
+    {
+        UnitsByChunk = new Dictionary<Vector2Int, HashSet<UnitController>>();
+        foreach (var chunk in MarchingSquares.Chunks)
+        {
+            UnitsByChunk.Add(chunk.ID, new HashSet<UnitController>());
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -34,6 +43,7 @@ public class SpawnManager : NetworkBehaviour
         ulong clientID = serverRpcParams.Receive.SenderClientId;
         Debug.Log("Spawning player " + clientID);
         SpawnOrTakeOverCommandersForPlayer(clientID);
+        SpawnDiggers();
     }
     public static void SpawnOrTakeOverCommandersForPlayer(ulong playerID)
     {
@@ -64,7 +74,13 @@ public class SpawnManager : NetworkBehaviour
         commanders[ownerID].Remove(commander);
         commanders[ownerID].Insert(commanderID, commander);
     }
-
+    public static void SpawnDiggers()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            var digger = SpawnNetworkBehaviourForPlayerAtPos(Instance.spawnSettings.DiggerPrefab, Vector3.right * i * 2, 0);
+        }
+    }
     public static NetworkObject SpawnNetworkBehaviourForPlayerAtPos(NetworkObject networkObject, Vector3 position, ulong playerID)
     {
         NetworkObject spawnedObj = Instantiate<NetworkObject>(networkObject, position, Quaternion.identity);

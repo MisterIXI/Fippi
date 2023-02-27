@@ -27,6 +27,7 @@ public class InputManager : MonoBehaviour
     public static event Action<CallbackContext> OnMove;
     public static event Action<CallbackContext> OnCommanderSwitch;
     public static event Action<CallbackContext> OnCommanderSwitchNumber;
+    public static event Action<CallbackContext> OnRecall;
     public void OnMoveInput(CallbackContext context)
     {
         OnMove?.Invoke(context);
@@ -38,6 +39,11 @@ public class InputManager : MonoBehaviour
     public void OnCommanderSwitchNumberInput(CallbackContext context)
     {
         OnCommanderSwitchNumber?.Invoke(context);
+    }
+
+    public void OnRecallInput(CallbackContext context)
+    {
+        OnRecall?.Invoke(context);
     }
     private void SubscribeToActions()
     {
@@ -52,6 +58,10 @@ public class InputManager : MonoBehaviour
         _playerInput.actions["CommanderSwitchNumber"].started += OnCommanderSwitchNumberInput;
         _playerInput.actions["CommanderSwitchNumber"].performed += OnCommanderSwitchNumberInput;
         _playerInput.actions["CommanderSwitchNumber"].canceled += OnCommanderSwitchNumberInput;
+
+        _playerInput.actions["Recall"].started += OnRecallInput;
+        _playerInput.actions["Recall"].performed += OnRecallInput;
+        _playerInput.actions["Recall"].canceled += OnRecallInput;
     }
 
     private void UnsubscribeFromActions()
@@ -67,6 +77,10 @@ public class InputManager : MonoBehaviour
         _playerInput.actions["CommanderSwitchNumber"].started -= OnCommanderSwitchNumberInput;
         _playerInput.actions["CommanderSwitchNumber"].performed -= OnCommanderSwitchNumberInput;
         _playerInput.actions["CommanderSwitchNumber"].canceled -= OnCommanderSwitchNumberInput;
+
+        _playerInput.actions["Recall"].started -= OnRecallInput;
+        _playerInput.actions["Recall"].performed -= OnRecallInput;
+        _playerInput.actions["Recall"].canceled -= OnRecallInput;
     }
 
 }

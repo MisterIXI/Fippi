@@ -6,6 +6,7 @@ public class Pathfollow : MonoBehaviour
     public LinkedList<Vector2> RemainingPath { get; private set; }
     private UnitSettings _unitSettings;
     private Vector2 _currentNode;
+    private Rigidbody2D _rb;
     [SerializeField] private bool _twoNodeStep = true;
     public PathFindStatus Status { get; private set; }
     public enum PathFindStatus { Idle, Searching, Following }
@@ -14,6 +15,12 @@ public class Pathfollow : MonoBehaviour
     /// Called when the path is finished, bool is true if the path was completed, false if it was cancelled
     /// </summary>
     public Action<bool> OnPathFinished;
+    private float _movementMult => _unitSettings.PathingMovementMultiplier;
+    private void Start()
+    {
+        _unitSettings = GetComponent<UnitController>().UnitSettings;
+        _rb = GetComponent<Rigidbody2D>();
+    }
     public void CancelPath()
     {
         Status = PathFindStatus.Idle;
@@ -49,7 +56,7 @@ public class Pathfollow : MonoBehaviour
     {
         if (Status == PathFindStatus.Following && RemainingPath != null)
         {
-            if (_distanceMovedThisNode >= _unitSettings.MovementSpeed)
+            if (_distanceMovedThisNode >= MarchingSquares.TileLength)
             {
                 if (RemainingPath.Count == 0)
                 {
@@ -69,8 +76,43 @@ public class Pathfollow : MonoBehaviour
                 actualTarget = RemainingPath.First.Value;
             else
                 actualTarget = _currentNode;
-            Vector2.MoveTowards(transform.position, actualTarget, _unitSettings.MovementSpeed * Time.fixedDeltaTime);
-            _distanceMovedThisNode += _unitSettings.MovementSpeed * Time.fixedDeltaTime;
+            _rb.MovePosition(Vector2.MoveTowards(transform.position, actualTarget, _unitSettings.MovementSpeed * _movementMult * Time.fixedDeltaTime));
+            _distanceMovedThisNode += _unitSettings.MovementSpeed * _movementMult * Time.fixedDeltaTime;
+        }
+    }
+
+    [ContextMenu("PrintRemainingPath")]
+    public void PrintRemainingPath()
+    {
+        if (RemainingPath != null)
+        {
+            string path = "";
+            foreach (var node in RemainingPath)
+            {
+                path += node + " ";
+            }
+            Debug.Log(path);
+        }
+        else
+        {
+            Debug.Log("No Path");
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (_unitSettings && _unitSettings.DrawDebugGizmos)
+        {
+            if (Status == PathFindStatus.Following && RemainingPath != null)
+            {
+                Gizmos.color = Color.green;
+                Vector2 lastNode = transform.position;
+                foreach (var node in RemainingPath)
+                {
+                    Gizmos.DrawLine(lastNode, node);
+                    lastNode = node;
+                }
+            }
         }
     }
 }

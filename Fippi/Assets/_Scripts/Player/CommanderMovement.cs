@@ -54,7 +54,8 @@ public class CommanderMovement : MonoBehaviour
             _moveVector = Vector2.MoveTowards(_moveVector, _moveInput, _movementSettings.CMInputChangeMax);
         // apply movement
         _rigidbody2D.velocity = _moveVector * _movementSettings.CMMoveSpeed;
-        transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(_moveVector.y, _moveVector.x) * Mathf.Rad2Deg);
+        if (_moveVector != Vector2.zero)
+            transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(_moveVector.y, _moveVector.x) * Mathf.Rad2Deg);
     }
     private void OnOwnActiveStateChanged(bool isActive)
     {

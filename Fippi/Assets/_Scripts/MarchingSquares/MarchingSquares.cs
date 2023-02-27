@@ -5,6 +5,8 @@ using Unity.Netcode;
 using UnityEngine;
 public class MarchingSquares : MonoBehaviour
 {
+    public static Action OnChunksGenerated;
+    public static bool IsReadyAndGenerated;
     public static int[,,] WallInfo { get; private set; }
     public static MarchingSquares Instance { get; private set; }
     public static MS_Chunk[,] Chunks { get; private set; }
@@ -71,6 +73,7 @@ public class MarchingSquares : MonoBehaviour
             return;
         }
         Chunks = new MS_Chunk[_chunkCount, _chunkCount];
+        IsReadyAndGenerated = false;
         StartCoroutine(GenerateChunks());
     }
 
@@ -98,6 +101,8 @@ public class MarchingSquares : MonoBehaviour
                 }
             }
         }
+        OnChunksGenerated?.Invoke();
+        IsReadyAndGenerated = true;
     }
     public static Vector2Int GetIndexFromPos(Vector2 position)
     {
@@ -115,10 +120,29 @@ public class MarchingSquares : MonoBehaviour
         float y = (index.y * TileLength) - offset;
         return new Vector2(x, y);
     }
+    public static Vector2Int GetChunkIndexFromPos(Vector2 position)
+    {
+        Vector2Int index = GetIndexFromPos(position);
+        int x = Mathf.FloorToInt(index.x / (float)_tileCount);
+        int y = Mathf.FloorToInt(index.y / (float)_tileCount);
+        return new Vector2Int(x, y);
+    }
 
+    public static Vector2 GetPosFromChunkIndex(Vector2Int index)
+    {
+        float offset = _axisLength / 2f;
+        float x = (index.x * _chunkAxisLength) - offset;
+        float y = (index.y * _chunkAxisLength) - offset;
+        return new Vector2(x, y);
+    }
     public static bool IsIndexInBounds(Vector2Int index)
     {
         return index.x >= 0 && index.x < _tileCountPerAxis && index.y >= 0 && index.y < _tileCountPerAxis;
+    }
+
+    public static bool IsChunkIndexInBounds(Vector2Int index)
+    {
+        return index.x >= 0 && index.x < _chunkCount && index.y >= 0 && index.y < _chunkCount;
     }
 
     public static byte GetWallByte(Vector2 position)
@@ -133,7 +157,22 @@ public class MarchingSquares : MonoBehaviour
         if (WallInfo[x, y + 1, 0] > 0) points |= 0b0001;
         return points;
     }
-
+    public static List<Vector2Int> GetSurroundingIDs(Vector2Int id)
+    {
+        List<Vector2Int> surroundingIDs = new List<Vector2Int>();
+        for (int y = -1; y <= 1; y++)
+        {
+            for (int x = -1; x <= 1; x++)
+            {
+                Vector2Int surroundingID = new Vector2Int(id.x + x, id.y + y);
+                if (IsIndexInBounds(surroundingID))
+                {
+                    surroundingIDs.Add(surroundingID);
+                }
+            }
+        }
+        return surroundingIDs;
+    }
     public static bool IsPositionInWall(Vector2 position)
     {
         Vector2Int index = GetIndexFromPos(position);

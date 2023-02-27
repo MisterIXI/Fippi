@@ -18,9 +18,16 @@ MonoBehaviour:
   - {r: 0.57885873, g: 1, b: 0.3066038, a: 1}
   - {r: 1, g: 0.96144354, b: 0.4764151, a: 1}
   - {r: 0.3820755, g: 0.56694615, b: 1, a: 1}
+  <CommanderColliderSettings>k__BackingField: {fileID: 11400000, guid: 5ac786df5abd0434a9ef2cdc22da6cf7, type: 2}
   <CommanderPrefab>k__BackingField: {fileID: 6453856251109322106, guid: d76a5759e43d4284bafa60d1ee83d2ad, type: 3}
+  <UnitColliderSettings>k__BackingField: {fileID: 11400000, guid: bcc2cd90f44bca0459dbb922ad216327, type: 2}
+  <BuilderSettings>k__BackingField: {fileID: 0}
+  <DiggerSettings>k__BackingField: {fileID: 11400000, guid: af00d6dee1a1f6d4ea23dd0bc7b26d1a, type: 2}
+  <ScoutSettings>k__BackingField: {fileID: 0}
+  <SoldierSettings>k__BackingField: {fileID: 0}
+  <RangedSettings>k__BackingField: {fileID: 0}
   <BuilderPrefab>k__BackingField: {fileID: 0}
-  <DiggerPrefab>k__BackingField: {fileID: 0}
+  <DiggerPrefab>k__BackingField: {fileID: 2723301475924785947, guid: 8744dd3ce1cf5884fa8a279c93eec2bb, type: 3}
   <ScoutPrefab>k__BackingField: {fileID: 0}
   <SoldierPrefab>k__BackingField: {fileID: 0}
   <RangedPrefab>k__BackingField: {fileID: 0}
