@@ -36,30 +36,53 @@ public class MS_Chunk : MonoBehaviour
         _mesh = new Mesh();
         _meshFilter.mesh = _mesh;
         Vector3[] vertices = new Vector3[_tileCount * _tileCount * 8];
+        Vector2[] _uv = new Vector2[_tileCount * _tileCount * 8];
         Offset = -Vector2.one * (_tileCount * _unitSize) / 2 - (Vector2.one * 0.5f);
+        float uvSteps = 1f / _tileCount;
         for (int y = 0; y < _tileCount; y++)
         {
             for (int x = 0; x < _tileCount; x++)
             {
-                vertices[(x + y * _tileCount) * 8 + 0] = new Vector3(x + Offset.x, y + Offset.y, 0);
-                vertices[(x + y * _tileCount) * 8 + 1] = new Vector3(x + Offset.x + 0.5f, y + Offset.y, 0);
-                vertices[(x + y * _tileCount) * 8 + 2] = new Vector3(x + Offset.x + 1, y + Offset.y, 0);
-                vertices[(x + y * _tileCount) * 8 + 3] = new Vector3(x + Offset.x, y + Offset.y + 0.5f, 0);
-                vertices[(x + y * _tileCount) * 8 + 4] = new Vector3(x + Offset.x + 1, y + Offset.y + 0.5f, 0);
-                vertices[(x + y * _tileCount) * 8 + 5] = new Vector3(x + Offset.x, y + Offset.y + 1, 0);
-                vertices[(x + y * _tileCount) * 8 + 6] = new Vector3(x + Offset.x + 0.5f, y + Offset.y + 1, 0);
-                vertices[(x + y * _tileCount) * 8 + 7] = new Vector3(x + Offset.x + 1, y + Offset.y + 1, 0);
+                int arrIndex = (x + y * _tileCount) * 8;
+                vertices[arrIndex + 0] = new Vector3(x + Offset.x, y + Offset.y, 0);
+                vertices[arrIndex + 1] = new Vector3(x + Offset.x + 0.5f, y + Offset.y, 0);
+                vertices[arrIndex + 2] = new Vector3(x + Offset.x + 1, y + Offset.y, 0);
+                vertices[arrIndex + 3] = new Vector3(x + Offset.x, y + Offset.y + 0.5f, 0);
+                vertices[arrIndex + 4] = new Vector3(x + Offset.x + 1, y + Offset.y + 0.5f, 0);
+                vertices[arrIndex + 5] = new Vector3(x + Offset.x, y + Offset.y + 1, 0);
+                vertices[arrIndex + 6] = new Vector3(x + Offset.x + 0.5f, y + Offset.y + 1, 0);
+                vertices[arrIndex + 7] = new Vector3(x + Offset.x + 1, y + Offset.y + 1, 0);
+
+                _uv[arrIndex + 0] = new Vector2(0.0f, 0.0f);
+                _uv[arrIndex + 1] = new Vector2(0.5f, 0.0f);
+                _uv[arrIndex + 2] = new Vector2(1.0f, 0.0f);
+                _uv[arrIndex + 3] = new Vector2(0.0f, 0.5f);
+                _uv[arrIndex + 4] = new Vector2(1.0f, 0.5f);
+                _uv[arrIndex + 5] = new Vector2(0.0f, 1.0f);
+                _uv[arrIndex + 6] = new Vector2(0.5f, 1.0f);
+                _uv[arrIndex + 7] = new Vector2(1.0f, 1.0f);
+
+                // Vector2 uvOffset = new Vector2(x, y) / _tileCount;
+                // _uv[arrIndex + 0] = new Vector2(uvOffset.x + (0.0f * uvSteps), uvOffset.y + (0.0f * uvSteps));
+                // _uv[arrIndex + 1] = new Vector2(uvOffset.x + (0.5f * uvSteps), uvOffset.y + (0.0f * uvSteps));
+                // _uv[arrIndex + 2] = new Vector2(uvOffset.x + (1.0f * uvSteps), uvOffset.y + (0.0f * uvSteps));
+                // _uv[arrIndex + 3] = new Vector2(uvOffset.x + (0.0f * uvSteps), uvOffset.y + (0.5f * uvSteps));
+                // _uv[arrIndex + 4] = new Vector2(uvOffset.x + (1.0f * uvSteps), uvOffset.y + (0.5f * uvSteps));
+                // _uv[arrIndex + 5] = new Vector2(uvOffset.x + (0.0f * uvSteps), uvOffset.y + (1.0f * uvSteps));
+                // _uv[arrIndex + 6] = new Vector2(uvOffset.x + (0.5f * uvSteps), uvOffset.y + (1.0f * uvSteps));
+                // _uv[arrIndex + 7] = new Vector2(uvOffset.x + (1.0f * uvSteps), uvOffset.y + (1.0f * uvSteps));
             }
         }
         _mesh.vertices = vertices;
         _meshRenderer.materials = chunkSettings.WallMaterials.Clone() as Material[];
+        _mesh.uv = _uv;
         _mesh.subMeshCount = _meshRenderer.materials.GetLength(0);
-        // generate UV
-        Vector2[] uvs = new Vector2[_tileCount * _tileCount * 8];
-        for (int i = 0; i < uvs.Length; i++)
-        {
-            uvs[i] = new Vector2(vertices[i].x / (_tileCount * _unitSize), vertices[i].y / (_tileCount * _unitSize));
-        }
+        // // generate UV
+        // Vector2[] uvs = new Vector2[_tileCount * _tileCount * 8];
+        // for (int i = 0; i < uvs.Length; i++)
+        // {
+        //     uvs[i] = new Vector2(vertices[i].x / (_tileCount * _unitSize), vertices[i].y / (_tileCount * _unitSize));
+        // }
         // generate background
         GameObject groundplane = GameObject.CreatePrimitive(PrimitiveType.Quad);
         groundplane.transform.localScale = new(_tileCount, _tileCount, 1);
@@ -82,7 +105,7 @@ public class MS_Chunk : MonoBehaviour
             {
                 // check for OOB at the right and top corner of map
                 if (x + 1 >= wallInfo.GetLength(0) || y + 1 >= wallInfo.GetLength(1)) continue;
-    
+
                 // special check for walls
                 {
                     byte points = 0;

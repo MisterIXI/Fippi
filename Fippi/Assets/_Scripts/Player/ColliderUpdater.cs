@@ -10,6 +10,8 @@ public class ColliderUpdater : MonoBehaviour
     private float _colliderOffset => _colliderSettings.ColliderCountPerDirection * _unitSize;
     private float _unitSize => MarchingSquares.Instance.chunkSettings.UnitSize;
     private int _currentColliderCount;
+    // [field: SerializeField] private ColliderLayers _colliderLayer;
+
     private void Awake()
     {
 
@@ -46,6 +48,7 @@ public class ColliderUpdater : MonoBehaviour
         if (_colliderParent != null)
             Destroy(_colliderParent);
         _colliderParent = new GameObject("Colliders for: " + gameObject.name);
+        _colliderParent.layer = (int)ColliderLayers.Wall;
         // _colliderParent.transform.parent = SpawnManager.ColliderParent;
         _polygonColliders = new PolygonCollider2D[_colliderAxisLength, _colliderAxisLength];
         for (int x = 0; x < _colliderAxisLength; x++)
@@ -105,4 +108,10 @@ public class ColliderUpdater : MonoBehaviour
             }
         }
     }
+}
+enum ColliderLayers
+{
+    Wall = 6,
+    Commander = 7,
+    Unit = 8
 }

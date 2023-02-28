@@ -5,7 +5,7 @@ public abstract class UnitController : NetworkBehaviour
 {
     public Vector2 PosToFollow;
     public LeaderFollowHandler LeaderFollowHandler;
-    private bool _isFlocking;
+    private bool _isFlocking = true;
     protected UnitSettings _unitSettings;
     public UnitSettings UnitSettings => _unitSettings;
     private Pathfollow _pathfollow;
@@ -87,8 +87,9 @@ public abstract class UnitController : NetworkBehaviour
             {
                 // continue pathing
                 _pathfollow.FollowPathFixedStep();
-                if (Vector2.Distance(_pathfollow.RemainingPath.Last.Value, LeaderFollowHandler.transform.position) < _unitSettings.RepathingDistance)
-
+                if (LeaderFollowHandler == null)
+                    Debug.LogError("LeaderFollowHandler is null, but is trying to get accessed");
+                if (_pathfollow.Status == Pathfollow.PathFindStatus.Idle || Vector2.Distance(_pathfollow.RemainingPath.Last.Value, LeaderFollowHandler.transform.position) < _unitSettings.RepathingDistance)
                 {
                     _pathfollow.CancelPath();
                     _pathfollow.SearchPath(LeaderFollowHandler.transform.position);
@@ -98,9 +99,11 @@ public abstract class UnitController : NetworkBehaviour
     }
     private void FlockingAttraction(Vector2 ownPos, Vector2 targetPos)
     {
+
         // move towards target
         ownPos = Vector2.MoveTowards(ownPos, targetPos, _unitSettings.MovementSpeed * Time.fixedDeltaTime);
         // // if new Tile is wall, get moved out
+        // TODO: this is not working
         // if (MarchingSquares.IsPositionInWall(ownPos))
         // {
         //     // get moved out
@@ -118,7 +121,7 @@ public abstract class UnitController : NetworkBehaviour
     {
         this.LeaderFollowHandler.StopFollowingCommander(this);
         LeaderFollowHandler = null;
-        _isFlocking = false;
+        _isFlocking = true;
         _pathfollow.CancelPath();
     }
 

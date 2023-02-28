@@ -1,6 +1,6 @@
 using System;
+using Unity.Mathematics;
 using UnityEngine;
-
 class MapGenTools
 {
     private static ChunkSettings _chunkSettings => MarchingSquares.Instance.chunkSettings;
@@ -64,6 +64,20 @@ class MapGenTools
             }
         }
         return wallInfoClone;
+    }
+
+    public static void FillEverythingSolid()
+    {
+        int[,,] wallInfo = _wallInfo;
+        int length = wallInfo.GetLength(0);
+        for (int y = 0; y < length; y++)
+        {
+            for (int x = 0; x < length; x++)
+            {
+                wallInfo[x, y, 0] = 1;
+                wallInfo[x, y, 1] = 0;
+            }
+        }
     }
 
     public static void FillMapAtRandom(bool forceRandomSeed = false)

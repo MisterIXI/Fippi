@@ -104,7 +104,7 @@ public class LeaderFollowHandler : MonoBehaviour
         {
             _recallingActive = true;
             Vector2Int index = MarchingSquares.GetChunkIndexFromPos(transform.position);
-            var ids = MarchingSquares.GetSurroundingIDs(index);
+            var ids = MarchingSquares.GetSurroundingChunkIDs(index,includeSelf:true);
             foreach (var id in ids)
             {
                 foreach (var unit in SpawnManager.UnitsByChunk[id])

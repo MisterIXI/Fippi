@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1922024136017248058}
   - component: {fileID: 8222723749347196513}
   - component: {fileID: 6266942711951573840}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PlayerSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110,7 +110,7 @@ GameObject:
   - component: {fileID: 8665798894638042100}
   - component: {fileID: 7303009993327508057}
   - component: {fileID: 4295037049197471196}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ID_Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -292,7 +292,7 @@ GameObject:
   - component: {fileID: 8057596483644550819}
   - component: {fileID: -3028210748672827869}
   - component: {fileID: 5101658089106889860}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Commander
   m_TagString: Untagged
   m_Icon: {fileID: 0}

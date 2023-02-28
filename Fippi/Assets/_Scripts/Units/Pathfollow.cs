@@ -33,15 +33,21 @@ public class Pathfollow : MonoBehaviour
     public void SearchPath(Vector2 targetPos)
     {
         Status = PathFindStatus.Searching;
-        Pathfinding.FindPath(transform.position, targetPos, StartPath);
-    }
+        Vector2? startPos = transform.position;
+        if (startPos.HasValue && MarchingSquares.IsPositionInWall(startPos.Value))
+            startPos = MarchingSquares.FindSafePathfindingAlternative(startPos.Value);
 
+        if (startPos.HasValue)
+            Pathfinding.FindPath(startPos.Value, targetPos, StartPath);
+        else
+            CancelPath();
+    }
     public void StartPath(LinkedList<Vector2> path)
     {
         if (path == null)
         {
             // No Path found
-            Status = PathFindStatus.Idle;
+            CancelPath();
         }
         else
         {
@@ -49,7 +55,7 @@ public class Pathfollow : MonoBehaviour
             RemainingPath = path;
             _currentNode = RemainingPath.First.Value;
             RemainingPath.RemoveFirst();
-            _distanceMovedThisNode = 0;
+            _distanceMovedThisNode = MarchingSquares.TileLength - Vector2.Distance(transform.position, _currentNode);
         }
     }
     public void FollowPathFixedStep()
@@ -72,7 +78,9 @@ public class Pathfollow : MonoBehaviour
                 _distanceMovedThisNode = 0;
             }
             Vector2 actualTarget;
-            if (_twoNodeStep && RemainingPath.Count > 0)
+            if (_twoNodeStep && RemainingPath.Count > 1)
+                actualTarget = RemainingPath.First.Next.Value;
+            else if(RemainingPath.Count > 0)
                 actualTarget = RemainingPath.First.Value;
             else
                 actualTarget = _currentNode;

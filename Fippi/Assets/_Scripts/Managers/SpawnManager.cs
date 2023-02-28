@@ -76,7 +76,7 @@ public class SpawnManager : NetworkBehaviour
     }
     public static void SpawnDiggers()
     {
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < SpawnSettings.DiggerCount; i++)
         {
             var digger = SpawnNetworkBehaviourForPlayerAtPos(Instance.spawnSettings.DiggerPrefab, Vector3.right * i * 2, 0);
         }

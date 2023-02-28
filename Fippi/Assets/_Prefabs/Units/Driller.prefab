@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5906954868549389579}
   - component: {fileID: 2336416136696385182}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,10 +97,10 @@ GameObject:
   - component: {fileID: 856076115810313658}
   - component: {fileID: 8365142065378101789}
   - component: {fileID: 6089936733065149737}
-  - component: {fileID: 492567466496954704}
   - component: {fileID: 8548669448115102458}
   - component: {fileID: 8894219552516716029}
-  m_Layer: 0
+  - component: {fileID: -1718929291538870853}
+  m_Layer: 8
   m_Name: Driller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -193,23 +193,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e3bbeefaeddb2c4dbf7a07a25e1fcc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _twoNodeStep: 1
---- !u!70 &492567466496954704
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2723301475924785946}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.31, y: 0.62}
-  m_Direction: 0
+  _twoNodeStep: 0
 --- !u!114 &8548669448115102458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -243,3 +227,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!58 &-1718929291538870853
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2723301475924785946}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.3

@@ -37,6 +37,7 @@ public class MarchingSquares : MonoBehaviour
     }
     public void DebugMapStart()
     {
+        // MapGenTools.FillEverythingSolid();
         MapGenTools.FillMapWithPerlinNoise(chunkSettings.PerlinScale);
         // MapGenTools.FillMapAtRandom();
         MapGenTools.FillMapEdgesWithSolidWall();
@@ -157,17 +158,40 @@ public class MarchingSquares : MonoBehaviour
         if (WallInfo[x, y + 1, 0] > 0) points |= 0b0001;
         return points;
     }
-    public static List<Vector2Int> GetSurroundingIDs(Vector2Int id)
+    public static List<Vector2Int> GetSurroundingIDs(Vector2Int id, bool includeDiagonals = true, bool includeSelf = false, bool excludeCardinals = false)
     {
         List<Vector2Int> surroundingIDs = new List<Vector2Int>();
         for (int y = -1; y <= 1; y++)
         {
             for (int x = -1; x <= 1; x++)
             {
+                if (x == 0 && y == 0) continue;
                 Vector2Int surroundingID = new Vector2Int(id.x + x, id.y + y);
                 if (IsIndexInBounds(surroundingID))
                 {
-                    surroundingIDs.Add(surroundingID);
+                    if (excludeCardinals && (x == 0 || y == 0)) continue;
+                    if (includeDiagonals || (x == 0 || y == 0))
+                        surroundingIDs.Add(surroundingID);
+                }
+            }
+        }
+        return surroundingIDs;
+    }
+
+    public static List<Vector2Int> GetSurroundingChunkIDs(Vector2Int id, bool includeDiagonals = true, bool includeSelf = false, bool excludeCardinals = false)
+    {
+        List<Vector2Int> surroundingIDs = new List<Vector2Int>();
+        for (int y = -1; y <= 1; y++)
+        {
+            for (int x = -1; x <= 1; x++)
+            {
+                if (!includeSelf && x == 0 && y == 0) continue;
+                Vector2Int surroundingID = new Vector2Int(id.x + x, id.y + y);
+                if (IsChunkIndexInBounds(surroundingID))
+                {
+                    if (excludeCardinals && (x == 0 || y == 0)) continue;
+                    if (includeDiagonals || (x == 0 || y == 0))
+                        surroundingIDs.Add(surroundingID);
                 }
             }
         }
@@ -185,6 +209,25 @@ public class MarchingSquares : MonoBehaviour
         // WallInfo = MapGenTools.GenerateCaveWalls(1);
         MapGenTools.FillMapWithPerlinNoise(chunkSettings.PerlinScale);
         RefrehMapAsync();
+    }
+    public static Vector2? FindSafePathfindingAlternative(Vector2 position)
+    {
+        Vector2Int index = GetIndexFromPos(position);
+        List<Vector2Int> diagonalNeighbours = GetSurroundingIDs(index, true, false, true);
+        float minDistance = float.MaxValue;
+        Vector2? closestNeighbour = null;
+        foreach (Vector2Int neighbour in diagonalNeighbours)
+        {
+            Vector2 neighbourPos = GetPosFromIndex(neighbour);
+            if (IsPositionInWall(neighbourPos)) continue;
+            float distance = Vector2.Distance(position, neighbourPos);
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                closestNeighbour = neighbourPos;
+            }
+        }
+        return closestNeighbour;
     }
 
     [ContextMenu("Regenerate Mesh With Random Seed")]

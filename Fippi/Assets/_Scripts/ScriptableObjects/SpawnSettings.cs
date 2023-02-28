@@ -15,6 +15,7 @@ public class SpawnSettings : ScriptableObject
     [field: Space(10)]
     [field: Header("Worker Settings")]
     [field: SerializeField] public ColliderSettings UnitColliderSettings { get; private set; } = null;
+    [field: SerializeField] public int DiggerCount { get; private set; } = 6;
     [field: Header("WorkerSettings")]
     [field: SerializeField] public UnitSettings BuilderSettings { get; private set; } = null;
     [field: SerializeField] public UnitSettings DiggerSettings { get; private set; } = null;
