@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ public abstract class UnitController : NetworkBehaviour
     private Pathfollow _pathfollow;
     private Vector2Int _currentChunkID = new Vector2Int(-1, -1);
     private Rigidbody2D _rigidbody;
+    public Action<bool, UnitController> OwnerShipRequestUpdate;
     [SerializeField] private bool _drawDebugGizmos;
     private void Start()
     {
@@ -19,6 +21,54 @@ public abstract class UnitController : NetworkBehaviour
         SetSettings();
     }
     protected abstract void SetSettings();
+
+    [ServerRpc(RequireOwnership = false)]
+    public void RequestOwnership_ServerRpc(ServerRpcParams serverRpcParams = default)
+    {
+        if (IsServer)
+        {
+            if (IsOwner && LeaderFollowHandler == null)
+            {
+            
+                // give ownership to sender
+                NetworkObject.ChangeOwnership(serverRpcParams.Receive.SenderClientId);
+            }
+            else
+            {
+                // deny ownership change and inform sender
+                ClientRpcParams clientRpcParams = new ClientRpcParams
+                {
+                    Send = new ClientRpcSendParams
+                    {
+                        TargetClientIds = new ulong[] { serverRpcParams.Receive.SenderClientId }
+                    }
+                };
+                GetOwnershipChangeDenied_ClientRpc(clientRpcParams);
+            }
+
+        }
+    }
+    [ClientRpc]
+    private void GetOwnershipChangeDenied_ClientRpc(ClientRpcParams clientRpcParams = default)
+    {
+        OwnerShipRequestUpdate?.Invoke(false, this);
+    }
+
+    public override void OnGainedOwnership()
+    {
+        base.OnGainedOwnership();
+        OwnerShipRequestUpdate?.Invoke(true, this);
+    }
+
+    [ServerRpc]
+    public void ResetOwnership_ServerRpc()
+    {
+        if (IsServer && !IsOwner)
+        {
+            NetworkObject.ChangeOwnership(NetworkManager.ServerClientId);
+        }
+    }
+
     private void FixedUpdate()
     {
         if (IsOwner)
@@ -123,6 +173,8 @@ public abstract class UnitController : NetworkBehaviour
         LeaderFollowHandler = null;
         _isFlocking = true;
         _pathfollow.CancelPath();
+        if (!IsServer) // return ownership to server
+            ResetOwnership_ServerRpc();
     }
 
     private bool IsFlockingPointTooFar(Vector2 from, Vector2 to)

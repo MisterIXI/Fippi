@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,6 +11,7 @@ public class LeaderFollowHandler : MonoBehaviour
     public Vector2 SwarmMiddlePoint { get; private set; }
     private CommanderSettings _commanderSettings;
     private bool _recallingActive;
+    private HashSet<UnitController> _unitsOwnershipChangeWaitingForResponse = new HashSet<UnitController>();
     private void Awake()
     {
         commander = GetComponent<CommanderController>();
@@ -59,24 +61,37 @@ public class LeaderFollowHandler : MonoBehaviour
     public void FollowCommander(UnitController unit)
     {
         // netcode: get local client id
-
         if (!unit.IsOwner)
-            unit.NetworkObject.ChangeOwnership(NetworkManager.Singleton.LocalClientId);
-        if (unit is WorkerController worker)
-            FollowCommander(worker);
-        else if (unit is FighterController fighter)
-            FollowCommander(fighter);
-    }
-    public void FollowCommander(WorkerController worker)
-    {
-        followers.AddWorker(worker);
-        worker.LeaderFollowHandler = this;
+        {
+            unit.RequestOwnership_ServerRpc();
+            _unitsOwnershipChangeWaitingForResponse.Add(unit);
+            unit.OwnerShipRequestUpdate += HandleUnitOwnershipRequest;
+        }
+        else
+        {
+            ActuallyFollowCommander(unit);
+        }
     }
 
-    public void FollowCommander(FighterController fighter)
+    private void HandleUnitOwnershipRequest(bool gainedOwnership, UnitController unit)
     {
-        followers.AddFighter(fighter);
-        fighter.LeaderFollowHandler = this;
+        if (gainedOwnership)
+        {
+            if (unit is WorkerController worker)
+                FollowCommander(worker);
+            else if (unit is FighterController fighter)
+                FollowCommander(fighter);
+        }
+        _unitsOwnershipChangeWaitingForResponse.Remove(unit);
+        unit.OwnerShipRequestUpdate -= HandleUnitOwnershipRequest;
+    }
+    private void ActuallyFollowCommander(UnitController unit)
+    {
+        if (unit is WorkerController worker)
+            followers.AddWorker(worker);
+        else if (unit is FighterController fighter)
+            followers.AddFighter(fighter);
+        unit.LeaderFollowHandler = this;
     }
 
     public void StopFollowingCommander(UnitController unit)
@@ -104,7 +119,7 @@ public class LeaderFollowHandler : MonoBehaviour
         {
             _recallingActive = true;
             Vector2Int index = MarchingSquares.GetChunkIndexFromPos(transform.position);
-            var ids = MarchingSquares.GetSurroundingChunkIDs(index,includeSelf:true);
+            var ids = MarchingSquares.GetSurroundingChunkIDs(index, includeSelf: true);
             foreach (var id in ids)
             {
                 foreach (var unit in SpawnManager.UnitsByChunk[id])
