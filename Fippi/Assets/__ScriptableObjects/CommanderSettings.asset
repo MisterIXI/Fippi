@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50115f5c17f20004482e2aee85de9e78, type: 3}
   m_Name: CommanderSettings
   m_EditorClassIdentifier: 
-  <MovementSpeed>k__BackingField: 1
+  <MovementSpeed>k__BackingField: 10
   <PositionCheckOffset>k__BackingField: 0.5
   <CollisionCheckCountPerDirection>k__BackingField: 1
   <CMMoveSpeed>k__BackingField: 10
   <CMInputChangeMax>k__BackingField: 0.5
+  SwarmCommanderDistance: 1
+  <SwarmIndiviualDistance>k__BackingField: 1
+  <RecallDistance>k__BackingField: 10

@@ -23,9 +23,9 @@ public class GameManager : NetworkBehaviour
     {
         base.OnNetworkSpawn();
         Debug.Log("Game manager spawned");
-        MarchingSquares.Instance.DebugMapStart();
+        // MarchingSquares.Instance.DebugMapStart();
         // SpawnManager.SpawnOrTakeOverCommandersForPlayer(NetworkManager.LocalClientId);
-        SpawnManager.Instance.SpawnPlayer_ServerRpc();
+        // SpawnManager.Instance.SpawnPlayer_ServerRpc();
     }
     private void OnSceneChanged(Scene current, Scene next)
     {

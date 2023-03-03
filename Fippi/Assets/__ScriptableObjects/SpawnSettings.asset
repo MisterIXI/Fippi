@@ -21,6 +21,7 @@ MonoBehaviour:
   <CommanderColliderSettings>k__BackingField: {fileID: 11400000, guid: 5ac786df5abd0434a9ef2cdc22da6cf7, type: 2}
   <CommanderPrefab>k__BackingField: {fileID: 6453856251109322106, guid: d76a5759e43d4284bafa60d1ee83d2ad, type: 3}
   <UnitColliderSettings>k__BackingField: {fileID: 11400000, guid: bcc2cd90f44bca0459dbb922ad216327, type: 2}
+  <DiggerCount>k__BackingField: 5
   <BuilderSettings>k__BackingField: {fileID: 0}
   <DiggerSettings>k__BackingField: {fileID: 11400000, guid: af00d6dee1a1f6d4ea23dd0bc7b26d1a, type: 2}
   <ScoutSettings>k__BackingField: {fileID: 0}

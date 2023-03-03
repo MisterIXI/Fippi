@@ -3,6 +3,11 @@ using Unity.Mathematics;
 using UnityEngine;
 class MapGenTools
 {
+    private const int NONE_INT = (int)WallType.None;
+    private const int WALL_INT = (int)WallType.Wall;
+    private const int PERMANENT_WALL_INT = (int)WallType.PermanentWall;
+    private const int RESA_INT = (int)WallType.RessourceA;
+    private const int RESB_INT = (int)WallType.RessourceB;
     private static ChunkSettings _chunkSettings => MarchingSquares.Instance.chunkSettings;
     private static int[,,] _wallInfo
     {
@@ -34,7 +39,7 @@ class MapGenTools
             {
                 if (x < width || x == length - width || y < width || y == length - width)
                 {
-                    wallInfo[x, y, 0] = 1;
+                    wallInfo[x, y, 0] = PERMANENT_WALL_INT;
                     wallInfo[x, y, 1] = 1;
                 }
             }
@@ -54,10 +59,13 @@ class MapGenTools
                 {
                     int wallCount = GetSurroundingWallCount(x, y);
                     if (wallCount > wallThreshold)
+                    {
+                        wallInfoClone[x, y, 0] = WALL_INT;
                         wallInfoClone[x, y, 0] = 1;
+                    }
                     else if (wallCount < floorThreshold)
                     {
-                        wallInfoClone[x, y, 0] = 0;
+                        wallInfoClone[x, y, 0] = NONE_INT;
                         wallInfoClone[x, y, 1] = 0;
                     }
                 }
@@ -74,8 +82,8 @@ class MapGenTools
         {
             for (int x = 0; x < length; x++)
             {
-                wallInfo[x, y, 0] = 1;
-                wallInfo[x, y, 1] = 0;
+                wallInfo[x, y, 0] = WALL_INT;
+                wallInfo[x, y, 1] = 1;
             }
         }
     }
@@ -92,8 +100,8 @@ class MapGenTools
         {
             for (int x = 0; x < length; x++)
             {
-                wallInfo[x, y, 0] = rand.Next(0, 2);
-                wallInfo[x, y, 1] = rand.Next(0, _chunkSettings.WallMaterials.Length);
+                wallInfo[x, y, 0] = rand.Next(0, _chunkSettings.WallMaterials.Length) + 1;
+                wallInfo[x, y, 1] = rand.Next(0, 2);
             }
         }
     }
@@ -109,10 +117,12 @@ class MapGenTools
         {
             for (int x = 0; x < length; x++)
             {
-                wallInfo[x, y, 0] = Mathf.RoundToInt(Mathf.PerlinNoise((x + offset) * perlinScale, (y + offset) * perlinScale));
-                wallInfo[x, y, 1] = 0;
+                wallInfo[x, y, 1] = Mathf.RoundToInt(Mathf.PerlinNoise((x + offset) * perlinScale, (y + offset) * perlinScale));
+                if (wallInfo[x, y, 1] > 0)
+                    wallInfo[x, y, 0] = 1;
             }
         }
+
     }
 
     #region Helper Methods

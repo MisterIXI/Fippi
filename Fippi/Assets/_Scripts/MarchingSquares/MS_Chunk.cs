@@ -94,7 +94,7 @@ public class MS_Chunk : MonoBehaviour
     public void RecalculateChunk()
     {
         int[,,] wallInfo = MarchingSquares.WallInfo;
-        int typeCount = _meshRenderer.materials.Length;
+        int lastTypeNum = (int)WallTypeExtensions.LastType;
         for (int i = 0; i < _meshTriangles.Length; i++)
         {
             _meshTriangles[i] = new List<int>();
@@ -109,10 +109,10 @@ public class MS_Chunk : MonoBehaviour
                 // special check for walls
                 {
                     byte points = 0;
-                    if (wallInfo[x, y, 0] > 0) points |= 0b1000;
-                    if (wallInfo[x + 1, y, 0] > 0) points |= 0b0100;
-                    if (wallInfo[x + 1, y + 1, 0] > 0) points |= 0b0010;
-                    if (wallInfo[x, y + 1, 0] > 0) points |= 0b0001;
+                    if (wallInfo[x, y, 1] > 0) points |= 0b1000;
+                    if (wallInfo[x + 1, y, 1] > 0) points |= 0b0100;
+                    if (wallInfo[x + 1, y + 1, 1] > 0) points |= 0b0010;
+                    if (wallInfo[x, y + 1, 1] > 0) points |= 0b0001;
                     int[] triangles = SquareConfigs.Triangles[points].Clone() as int[];
                     for (int i = 0; i < triangles.Length; i++)
                     {
@@ -121,14 +121,15 @@ public class MS_Chunk : MonoBehaviour
                     _meshTriangles[0].AddRange(triangles);
                 }
                 // extra check for other submesh
-                for (int m = 1; m < typeCount; m++)
+                int offset = 1;
+                for (int m = 1; m < lastTypeNum; m++)
                 {
-                    byte points = 0;
-                    if (wallInfo[x, y, 1] == m && wallInfo[x, y, 0] > 0) points |= 0b1000;
-                    if (wallInfo[x + 1, y, 1] == m && wallInfo[x + 1, y, 0] > 0) points |= 0b0100;
-                    if (wallInfo[x + 1, y + 1, 1] == m && wallInfo[x + 1, y + 1, 0] > 0) points |= 0b0010;
-                    if (wallInfo[x, y + 1, 1] == m && wallInfo[x, y + 1, 0] > 0) points |= 0b0001;
-                    int[] triangles = SquareConfigs.Triangles[points].Clone() as int[];
+                    byte b = 0;
+                    if (wallInfo[x, y, 0] == m + offset && wallInfo[x, y, 1] > 0) b |= 0b1000;
+                    if (wallInfo[x + 1, y, 0] == m + offset && wallInfo[x + 1, y, 1] > 0) b |= 0b0100;
+                    if (wallInfo[x + 1, y + 1, 0] == m + offset && wallInfo[x + 1, y + 1, 1] > 0) b |= 0b0010;
+                    if (wallInfo[x, y + 1, 0] == m + offset && wallInfo[x, y + 1, 1] > 0) b |= 0b0001;
+                    int[] triangles = SquareConfigs.Triangles[b].Clone() as int[];
                     for (int i = 0; i < triangles.Length; i++)
                     {
                         triangles[i] += (((x - StartIndex.x) + (y - StartIndex.y) * (_tileCount)) * 8);

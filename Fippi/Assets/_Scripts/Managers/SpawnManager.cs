@@ -14,7 +14,7 @@ public class SpawnManager : NetworkBehaviour
     [field: SerializeField] private Transform _commanderParent;
     public static Transform CommanderParent => Instance._commanderParent;
     public static Dictionary<Vector2Int, HashSet<UnitController>> UnitsByChunk { get; private set; } = new Dictionary<Vector2Int, HashSet<UnitController>>();
-
+    public static Dictionary<ulong, NetworkObject> SpawnedObjects = new Dictionary<ulong, NetworkObject>();
     public static SpawnManager Instance { get; private set; }
 
     private void Awake()
@@ -78,7 +78,7 @@ public class SpawnManager : NetworkBehaviour
     {
         for (int i = 0; i < SpawnSettings.DiggerCount; i++)
         {
-            var digger = SpawnNetworkBehaviourForPlayerAtPos(Instance.spawnSettings.DiggerPrefab, Vector3.right * i * 2, 0);
+            var digger = SpawnNetworkObjectAtPos(Instance.spawnSettings.DiggerPrefab, Vector3.right * i * 2);
         }
     }
     public static NetworkObject SpawnNetworkBehaviourForPlayerAtPos(NetworkObject networkObject, Vector3 position, ulong playerID)
@@ -87,6 +87,16 @@ public class SpawnManager : NetworkBehaviour
         Debug.Log("Spawning " + spawnedObj.name + " for player " + playerID);
         spawnedObj.SpawnWithOwnership(playerID);
         spawnedObj.ChangeOwnership(playerID);
+        SpawnedObjects.Add(spawnedObj.NetworkObjectId, spawnedObj);
+        return spawnedObj;
+    }
+
+    public static NetworkObject SpawnNetworkObjectAtPos(NetworkObject networkObject, Vector3 position)
+    {
+        NetworkObject spawnedObj = Instantiate<NetworkObject>(networkObject, position, Quaternion.identity);
+        Debug.Log("Spawning " + spawnedObj.name);
+        spawnedObj.Spawn();
+        SpawnedObjects.Add(spawnedObj.NetworkObjectId, spawnedObj);
         return spawnedObj;
     }
     [ContextMenu("Print Commander Dict")]

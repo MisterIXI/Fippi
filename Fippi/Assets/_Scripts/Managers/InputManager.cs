@@ -28,6 +28,10 @@ public class InputManager : MonoBehaviour
     public static event Action<CallbackContext> OnCommanderSwitch;
     public static event Action<CallbackContext> OnCommanderSwitchNumber;
     public static event Action<CallbackContext> OnRecall;
+    public static event Action<CallbackContext> OnCursorPosition;
+    public static event Action<CallbackContext> OnSendOneUnit;
+    public static event Action<CallbackContext> OnSendMultipleUnits;
+
     public void OnMoveInput(CallbackContext context)
     {
         OnMove?.Invoke(context);
@@ -44,6 +48,21 @@ public class InputManager : MonoBehaviour
     public void OnRecallInput(CallbackContext context)
     {
         OnRecall?.Invoke(context);
+    }
+
+    public void OnCursorPositionInput(CallbackContext context)
+    {
+        OnCursorPosition?.Invoke(context);
+    }
+
+    public void OnSendOneUnitInput(CallbackContext context)
+    {
+        OnSendOneUnit?.Invoke(context);
+    }
+
+    public void OnSendMultipleUnitsInput(CallbackContext context)
+    {
+        OnSendMultipleUnits?.Invoke(context);
     }
     private void SubscribeToActions()
     {
@@ -62,6 +81,18 @@ public class InputManager : MonoBehaviour
         _playerInput.actions["Recall"].started += OnRecallInput;
         _playerInput.actions["Recall"].performed += OnRecallInput;
         _playerInput.actions["Recall"].canceled += OnRecallInput;
+
+        _playerInput.actions["CursorPosition"].started += OnCursorPositionInput;
+        _playerInput.actions["CursorPosition"].performed += OnCursorPositionInput;
+        _playerInput.actions["CursorPosition"].canceled += OnCursorPositionInput;
+
+        _playerInput.actions["SendOneUnit"].started += OnSendOneUnitInput;
+        _playerInput.actions["SendOneUnit"].performed += OnSendOneUnitInput;
+        _playerInput.actions["SendOneUnit"].canceled += OnSendOneUnitInput;
+
+        _playerInput.actions["SendMultipleUnits"].started += OnSendMultipleUnitsInput;
+        _playerInput.actions["SendMultipleUnits"].performed += OnSendMultipleUnitsInput;
+        _playerInput.actions["SendMultipleUnits"].canceled += OnSendMultipleUnitsInput;
     }
 
     private void UnsubscribeFromActions()
@@ -81,6 +112,18 @@ public class InputManager : MonoBehaviour
         _playerInput.actions["Recall"].started -= OnRecallInput;
         _playerInput.actions["Recall"].performed -= OnRecallInput;
         _playerInput.actions["Recall"].canceled -= OnRecallInput;
+
+        _playerInput.actions["CursorPosition"].started -= OnCursorPositionInput;
+        _playerInput.actions["CursorPosition"].performed -= OnCursorPositionInput;
+        _playerInput.actions["CursorPosition"].canceled -= OnCursorPositionInput;
+
+        _playerInput.actions["SendOneUnit"].started -= OnSendOneUnitInput;
+        _playerInput.actions["SendOneUnit"].performed -= OnSendOneUnitInput;
+        _playerInput.actions["SendOneUnit"].canceled -= OnSendOneUnitInput;
+
+        _playerInput.actions["SendMultipleUnits"].started -= OnSendMultipleUnitsInput;
+        _playerInput.actions["SendMultipleUnits"].performed -= OnSendMultipleUnitsInput;
+        _playerInput.actions["SendMultipleUnits"].canceled -= OnSendMultipleUnitsInput;
     }
 
 }

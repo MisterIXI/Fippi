@@ -7,11 +7,12 @@ public class MarchingSquares : MonoBehaviour
 {
     public static Action OnChunksGenerated;
     public static bool IsReadyAndGenerated;
+    /// <summary>
+    /// Wallinfo is the big array that holds all the wall info for the map. [x,y,i] x,y is xy coords, i is: 0 = WallType, 1 = Density/health
+    /// </summary>
     public static int[,,] WallInfo { get; private set; }
     public static MarchingSquares Instance { get; private set; }
     public static MS_Chunk[,] Chunks { get; private set; }
-    // public static event Action OnWallInfoPointerChanged;
-    // public static event Action OnWallInfoChanged;
     [field: SerializeField] public ChunkSettings chunkSettings { get; private set; } = null;
     private static int _chunkCount => Instance.chunkSettings.ChunksPerAxis;
     private static int _tileCount => Instance.chunkSettings.TilesPerAxis;
@@ -19,7 +20,7 @@ public class MarchingSquares : MonoBehaviour
     public static float TileLength => Instance.chunkSettings.UnitSize;
     private static float _axisLength => _tileCountPerAxis * TileLength;
     private static float _chunkAxisLength => _tileCount * TileLength;
-
+    public static Action<Vector2Int, WallType, int> OnWallInfoChanged;
     private void Awake()
     {
         if (Instance != null)
@@ -33,8 +34,21 @@ public class MarchingSquares : MonoBehaviour
 
     private void Start()
     {
-
+        DebugMapStart();
     }
+
+    public void SetWallInfo(int[,,] wallInfo)
+    {
+        WallInfo = wallInfo;
+        // OnWallInfoPointerChanged?.Invoke();
+    }
+
+    public void ChangeWallAt(Vector2Int index, WallType wallType, int value)
+    {
+        WallInfo[index.x, index.y, (int)wallType] = value;
+        OnWallInfoChanged?.Invoke(index, wallType, value);
+    }
+
     public void DebugMapStart()
     {
         // MapGenTools.FillEverythingSolid();
