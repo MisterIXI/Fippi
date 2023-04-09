@@ -28,7 +28,7 @@ public class InputManager : MonoBehaviour
     public static event Action<CallbackContext> OnCommanderSwitch;
     public static event Action<CallbackContext> OnCommanderSwitchNumber;
     public static event Action<CallbackContext> OnRecall;
-    public static event Action<CallbackContext> OnCursorPosition;
+    public static event Action<CallbackContext> OnMoveCursor;
     public static event Action<CallbackContext> OnSendOneUnit;
     public static event Action<CallbackContext> OnSendMultipleUnits;
 
@@ -50,9 +50,9 @@ public class InputManager : MonoBehaviour
         OnRecall?.Invoke(context);
     }
 
-    public void OnCursorPositionInput(CallbackContext context)
+    public void OnMoveCursorInput(CallbackContext context)
     {
-        OnCursorPosition?.Invoke(context);
+        OnMoveCursor?.Invoke(context);
     }
 
     public void OnSendOneUnitInput(CallbackContext context)
@@ -82,9 +82,9 @@ public class InputManager : MonoBehaviour
         _playerInput.actions["Recall"].performed += OnRecallInput;
         _playerInput.actions["Recall"].canceled += OnRecallInput;
 
-        _playerInput.actions["CursorPosition"].started += OnCursorPositionInput;
-        _playerInput.actions["CursorPosition"].performed += OnCursorPositionInput;
-        _playerInput.actions["CursorPosition"].canceled += OnCursorPositionInput;
+        _playerInput.actions["MoveCursor"].started += OnMoveCursorInput;
+        _playerInput.actions["MoveCursor"].performed += OnMoveCursorInput;
+        _playerInput.actions["MoveCursor"].canceled += OnMoveCursorInput;
 
         _playerInput.actions["SendOneUnit"].started += OnSendOneUnitInput;
         _playerInput.actions["SendOneUnit"].performed += OnSendOneUnitInput;
@@ -113,9 +113,9 @@ public class InputManager : MonoBehaviour
         _playerInput.actions["Recall"].performed -= OnRecallInput;
         _playerInput.actions["Recall"].canceled -= OnRecallInput;
 
-        _playerInput.actions["CursorPosition"].started -= OnCursorPositionInput;
-        _playerInput.actions["CursorPosition"].performed -= OnCursorPositionInput;
-        _playerInput.actions["CursorPosition"].canceled -= OnCursorPositionInput;
+        _playerInput.actions["MoveCursor"].started -= OnMoveCursorInput;
+        _playerInput.actions["MoveCursor"].performed -= OnMoveCursorInput;
+        _playerInput.actions["MoveCursor"].canceled -= OnMoveCursorInput;
 
         _playerInput.actions["SendOneUnit"].started -= OnSendOneUnitInput;
         _playerInput.actions["SendOneUnit"].performed -= OnSendOneUnitInput;

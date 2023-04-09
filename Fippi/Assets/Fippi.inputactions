@@ -34,17 +34,17 @@
                 },
                 {
                     "name": "Recall",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "e1c13603-555c-4987-94b0-de338cbce1a1",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
-                    "name": "CursorPosition",
+                    "name": "MoveCursor",
                     "type": "Value",
-                    "id": "c85bfcd8-2e82-439d-bbfa-291a3f008c5e",
+                    "id": "85e17094-d736-4352-bef4-e7e9eeba652d",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
@@ -379,26 +379,48 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "a7e8bbff-bbb1-4d0e-a193-468c9e5a4199",
-                    "path": "<Keyboard>/r",
+                    "name": "R_Key",
+                    "id": "bf03ca81-c2cb-45d8-8808-0b1a0c0e832d",
+                    "path": "1DAxis(minValue=0,whichSideWins=1)",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard&Mouse",
+                    "groups": "",
                     "action": "Recall",
-                    "isComposite": false,
+                    "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "538486b9-7af7-4f39-96e9-ca1e9d25506b",
-                    "path": "<Mouse>/position",
+                    "name": "Positive",
+                    "id": "525ad63d-0b6d-43e1-8502-37df2fd73d4e",
+                    "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "CursorPosition",
+                    "groups": "",
+                    "action": "Recall",
                     "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Trigger",
+                    "id": "985af708-d7a9-47da-b41a-9b3f5f82d11a",
+                    "path": "1DAxis(minValue=0)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Recall",
+                    "isComposite": true,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "positive",
+                    "id": "6f0be26f-c541-4b56-bc11-211ab71fc1ae",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Recall",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "",
@@ -413,12 +435,56 @@
                 },
                 {
                     "name": "",
+                    "id": "13a78255-3a7b-498e-a48e-24cd3a748cef",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "SendOneUnit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "2d4bbc4b-9293-4cb9-b014-7c2d06682276",
                     "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "SendMultipleUnits",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1c318b4a-0c19-4b15-9718-16ad55dea2c6",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "SendMultipleUnits",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6f8f42c2-6188-4260-aa08-3f97fae75e87",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "MoveCursor",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e456324d-1431-4170-be8d-94278156936a",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "MoveCursor",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

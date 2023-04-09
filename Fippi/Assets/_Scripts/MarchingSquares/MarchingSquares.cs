@@ -116,8 +116,8 @@ public class MarchingSquares : MonoBehaviour
                 }
             }
         }
-        OnChunksGenerated?.Invoke();
         IsReadyAndGenerated = true;
+        OnChunksGenerated?.Invoke();
     }
     public static Vector2Int GetIndexFromPos(Vector2 position)
     {

@@ -3,7 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 [RequireComponent(typeof(CommanderController))]
-[RequireComponent(typeof(CommanderCommandController))]
+// [RequireComponent(typeof(CommanderCommandController))]
 public class LeaderFollowHandler : MonoBehaviour
 {
     public CommanderController commander { get; private set; }

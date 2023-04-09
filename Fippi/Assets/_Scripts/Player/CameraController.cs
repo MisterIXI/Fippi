@@ -6,9 +6,9 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     public static CameraController Instance { get; private set; }
-    public CinemachineVirtualCamera VirtualCamera { get; private set; }
-    public Camera Camera { get; private set; }
-    public CinemachineBrain CMBrain { get; private set; }
+    public static CinemachineVirtualCamera VirtualCamera { get; private set; }
+    public static Camera Camera { get; private set; }
+    public static CinemachineBrain CMBrain { get; private set; }
     private void Awake()
     {
         if (Instance != null)

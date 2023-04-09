@@ -15,4 +15,5 @@ public class CommanderSettings : ScriptableObject
     [field: SerializeField][field: Range(0f, 10f)] public float SwarmCommanderDistance = 1f;
     [field: SerializeField][field: Range(0.01f, 2f)] public float SwarmIndiviualDistance { get; private set; } = 1f;
     [field: SerializeField]public float RecallDistance { get; private set; } = 10f;
+    // [field: SerializeField][field: Header("TaskSettings")]
 }

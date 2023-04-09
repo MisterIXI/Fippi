@@ -9,12 +9,12 @@ using UnityEngine.InputSystem;
 public class CommanderController : NetworkBehaviour
 {
     public NetworkObject networkObject => gameObject.GetComponent<NetworkObject>();
-    public static CommanderController activeCommander { get; private set; }
+    public static CommanderController ActiveCommander { get; private set; }
     public static event Action<ulong, CommanderController, CommanderController> OnActiveCommanderChanged;
     public NetworkVariable<int> commanderIDVar = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     [field: SerializeField] private TextMeshPro commanderNameText;
     public event Action<bool> OwnActiveStateChanged;
-    public bool IsActiveCommander => activeCommander == this;
+    public bool IsActiveCommander => ActiveCommander == this;
     public event Action<bool> OnOwnershipChanged;
     public event Action<string> OnNameChanged;
     public static int owner_id_helper = 0;
@@ -63,10 +63,10 @@ public class CommanderController : NetworkBehaviour
 
     public void MakeActiveCommander()
     {
-        if (IsOwner && activeCommander != this)
+        if (IsOwner && ActiveCommander != this)
         {
-            OnActiveCommanderChanged?.Invoke(OwnerClientId, activeCommander, this);
-            activeCommander = this;
+            ActiveCommander = this;
+            OnActiveCommanderChanged?.Invoke(OwnerClientId, ActiveCommander, this);
             Debug.Log("Made myself the active commander! " + gameObject.name);
         }
     }
@@ -91,10 +91,6 @@ public class CommanderController : NetworkBehaviour
     }
     private void OnActiveCommanderChangedHandler(ulong playerID, CommanderController oldCommander, CommanderController newCommander)
     {
-        if (oldCommander == this)
-            OwnActiveStateChanged?.Invoke(false);
-        else if (newCommander == this)
-            OwnActiveStateChanged?.Invoke(true);
 
         if (playerID == NetworkManager.LocalClientId)
         {
@@ -108,6 +104,10 @@ public class CommanderController : NetworkBehaviour
         {
             // other player's commander selection changed
         }
+        if (oldCommander == this)
+            OwnActiveStateChanged?.Invoke(false);
+        else if (newCommander == this)
+            OwnActiveStateChanged?.Invoke(true);
     }
 
     private void OnSwitchCommanderInput(InputAction.CallbackContext context)
@@ -173,7 +173,7 @@ public class CommanderController : NetworkBehaviour
     [ContextMenu("DebugPrintActiveCommanderName")]
     private void DebugPrintActiveCommanderName()
     {
-        Debug.Log("Active commander is " + activeCommander.gameObject.name);
+        Debug.Log("Active commander is " + ActiveCommander.gameObject.name);
         Debug.Log("IsOwner: " + IsOwner);
     }
 }

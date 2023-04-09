@@ -144,7 +144,7 @@ public class SpawnManager : NetworkBehaviour
 
     private void OnDrawGizmos()
     {
-        if (CommanderController.activeCommander != null)
-            Gizmos.DrawWireSphere(CommanderController.activeCommander.transform.position, 1f);
+        if (CommanderController.ActiveCommander != null)
+            Gizmos.DrawWireSphere(CommanderController.ActiveCommander.transform.position, 1f);
     }
 }
